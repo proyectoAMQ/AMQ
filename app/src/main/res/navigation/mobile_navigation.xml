@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.amq.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_listarAlojamientos"
+            app:destination="@id/listarAlojamientos" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.amq.ui.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.amq.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/listarAlojamientos"
+        android:name="com.example.amq.ui.vistas.ListarAlojamientos"
+        android:label="fragment_listar_alojamientos"
+        tools:layout="@layout/fragment_listar_alojamientos" >
+        <argument
+            android:name="estrellas"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="pais"
+            app:argType="string" />
+        <argument
+            android:name="precio"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+</navigation>
