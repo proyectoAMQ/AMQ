@@ -1,12 +1,6 @@
 package com.example.amq.ui.vistas;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.amq.MainActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+
 import com.example.amq.R;
 import com.example.amq.models.Producto;
 import com.example.amq.rest.IAmqApi;
@@ -41,12 +39,12 @@ public class ListarAlojamientos extends Fragment {
     TextView tvDescripcion;
     TextView tvPrecio;
     Button btnBuscar;
+    TextView text;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    TextView text;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -82,12 +80,11 @@ public class ListarAlojamientos extends Fragment {
             }
         });
 
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //prueba = (String) getArguments().get("PRUEBA");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listar_alojamientos, container, false);
@@ -110,6 +107,10 @@ public class ListarAlojamientos extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        /*TextView text = view.findViewById(R.id.textAlojamientos);
+        text.setText(prueba);
+        TextView text2 = view.findViewById(R.id.textAlojamientos2);
+        text2.setText(prueba2);*/
         super.onViewCreated(view, savedInstanceState);
         text = view.findViewById(R.id.edtCodigo);
     }
