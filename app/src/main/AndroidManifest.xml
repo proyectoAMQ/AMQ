@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.amq">
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,9 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AMQ"
         tools:targetApi="31">
-        <activity
+<!--        <activity
             android:name=".ListarAlojamientos"
             android:exported="false" />
+-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

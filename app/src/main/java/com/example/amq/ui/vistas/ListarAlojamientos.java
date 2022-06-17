@@ -11,9 +11,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.amq.MainActivity;
 import com.example.amq.R;
+import com.example.amq.models.Producto;
+import com.example.amq.rest.IAmqApi;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +35,12 @@ import com.example.amq.R;
  * create an instance of this fragment.
  */
 public class ListarAlojamientos extends Fragment {
+
+    EditText edtCodigo;
+    TextView tvNombre;
+    TextView tvDescripcion;
+    TextView tvPrecio;
+    Button btnBuscar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,18 +81,69 @@ public class ListarAlojamientos extends Fragment {
                 System.out.println(resultB);
             }
         });
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_listar_alojamientos, container, false);
+        View view = inflater.inflate(R.layout.fragment_listar_alojamientos, container, false);
+
+        edtCodigo = (EditText) view.findViewById(R.id.edtCodigo);
+        tvNombre = (TextView) view.findViewById(R.id.tvNombre);
+        tvDescripcion = (TextView) view.findViewById(R.id.tvDescripcion);
+        tvPrecio = (TextView) view.findViewById(R.id.tvPrecio);
+        btnBuscar = (Button) view.findViewById(R.id.btnBuscar);
+
+        btnBuscar.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                find(edtCodigo.getText().toString());
+            }
+        });
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        text = view.findViewById(R.id.text);
+        text = view.findViewById(R.id.edtCodigo);
     }
+
+    private void find( String codigo ){
+        Retrofit retrofit  = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.3:8080/")
+                .addConverterFactory( GsonConverterFactory.create() )
+                .build();
+
+        IAmqApi productoAPI = retrofit.create(IAmqApi.class);
+
+        /*=>*/
+        Call<List<Producto>> call = productoAPI.findList(codigo);
+        call.enqueue( new Callback<List<Producto>>(){
+
+            @Override
+            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
+                try{
+                    if(response.isSuccessful()){
+                        List<Producto> p = response.body();
+                        Log.d("listado: ", p.toString());
+                    }
+                }catch(Exception e){
+                    Toast.makeText(ListarAlojamientos.this.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<Producto>> call, Throwable t) {
+                Toast.makeText(ListarAlojamientos.this.getContext(), "la red ta muerta", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
