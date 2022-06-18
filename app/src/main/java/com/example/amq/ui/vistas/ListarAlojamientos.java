@@ -78,6 +78,18 @@ public class ListarAlojamientos extends Fragment {
             if (getArguments().getString(ARG_RANGO).equals("0-50 U$D")){
                 rangoDesde = 0;
                 rangoHasta = 50;
+            } else if (getArguments().getString(ARG_RANGO).equals("51-100 U$D")){
+                rangoDesde = 51;
+                rangoHasta = 100;
+            }else if (getArguments().getString(ARG_RANGO).equals("101-200 U$D")){
+                rangoDesde = 101;
+                rangoHasta = 200;
+            }else if (getArguments().getString(ARG_RANGO).equals("201-300 U$D")){
+                rangoDesde = 201;
+                rangoHasta = 300;
+            }else if (getArguments().getString(ARG_RANGO).equals("+301 U$D")){
+                rangoDesde = 301;
+                rangoHasta = 1000;
             }
             Log.v("estrellasList", String.valueOf(estrellas));
             Log.v("paisList", pais);
