@@ -33,14 +33,12 @@
         tools:layout="@layout/fragment_listar_alojamientos" >
         <argument
             android:name="estrellas"
-            app:argType="integer"
-            android:defaultValue="0" />
+            app:argType="string" />
         <argument
             android:name="pais"
             app:argType="string" />
         <argument
             android:name="precio"
-            app:argType="integer"
-            android:defaultValue="0" />
+            app:argType="string" />
     </fragment>
 </navigation>

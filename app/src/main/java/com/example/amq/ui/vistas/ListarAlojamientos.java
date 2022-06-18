@@ -43,25 +43,28 @@ public class ListarAlojamientos extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_EST = "estrellas";
+    private static final String ARG_PAIS = "pais";
+    private static final String ARG_RANGO = "rango";
     TextView text;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int estrellas;
+    private String pais;
+    private int rangoDesde;
+    private int rangoHasta;
 
     public ListarAlojamientos() {
         // Required empty public constructor
-        int a=3;
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ListarAlojamientos newInstance(String param1, String param2) {
+    public static ListarAlojamientos newInstance(String estrellas, String pais, String rango) {
         ListarAlojamientos fragment = new ListarAlojamientos();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_EST, estrellas);
+        args.putString(ARG_PAIS, pais);
+        args.putString(ARG_RANGO, rango);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,8 +73,17 @@ public class ListarAlojamientos extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            estrellas = Integer.parseInt(getArguments().getString(ARG_EST));
+            pais = getArguments().getString(ARG_PAIS);
+            if (getArguments().getString(ARG_RANGO).equals("0-50 U$D")){
+                rangoDesde = 0;
+                rangoHasta = 50;
+            }
+            Log.v("estrellasList", String.valueOf(estrellas));
+            Log.v("paisList", pais);
+            Log.v("rangoDList", String.valueOf(rangoDesde));
+            Log.v("rangoHList", String.valueOf(rangoHasta));
+
         }
         getParentFragmentManager().setFragmentResultListener("key", this, new FragmentResultListener() {
             @Override
