@@ -9,6 +9,8 @@
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2707127888997396" />
         <entry key="app/src/main/res/layout/fragment_listado_alojamientos.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/fragment_listar_alojamientos.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/grid_view_item.xml" value="0.10891590678824721" />
+        <entry key="app/src/main/res/layout/grid_view_item_alojamiento.xml" value="0.1693840579710145" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.23229166666666667" />
       </map>
     </option>

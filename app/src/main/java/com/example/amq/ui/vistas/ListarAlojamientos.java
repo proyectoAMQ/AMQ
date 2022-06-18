@@ -13,12 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.amq.MainActivity;
+import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
 import com.example.amq.R;
-import com.example.amq.models.Producto;
+import com.example.amq.models.DtAlojamiento;
+import com.example.amq.models.DtFiltrosAloj;
+import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 
 import java.util.List;
@@ -36,11 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ListarAlojamientos extends Fragment {
 
-    EditText edtCodigo;
-    TextView tvNombre;
-    TextView tvDescripcion;
-    TextView tvPrecio;
-    Button btnBuscar;
+    GridView gridViewAloj;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,6 +53,7 @@ public class ListarAlojamientos extends Fragment {
 
     public ListarAlojamientos() {
         // Required empty public constructor
+        int a=3;
     }
 
     // TODO: Rename and change types and number of parameters
@@ -92,18 +92,7 @@ public class ListarAlojamientos extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listar_alojamientos, container, false);
 
-        edtCodigo = (EditText) view.findViewById(R.id.edtCodigo);
-        tvNombre = (TextView) view.findViewById(R.id.tvNombre);
-        tvDescripcion = (TextView) view.findViewById(R.id.tvDescripcion);
-        tvPrecio = (TextView) view.findViewById(R.id.tvPrecio);
-        btnBuscar = (Button) view.findViewById(R.id.btnBuscar);
-
-        btnBuscar.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                find(edtCodigo.getText().toString());
-            }
-        });
+        gridViewAloj = (GridView) view.findViewById(R.id.gridViewAloj);
 
         return view;
     }
@@ -111,37 +100,33 @@ public class ListarAlojamientos extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        text = view.findViewById(R.id.edtCodigo);
+
+        DtFiltrosAloj filtros = new DtFiltrosAloj(true);
+        listarAlojamientos(filtros);
     }
 
-    private void find( String codigo ){
-        Retrofit retrofit  = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.3:8080/")
-                .addConverterFactory( GsonConverterFactory.create() )
-                .build();
 
-        IAmqApi productoAPI = retrofit.create(IAmqApi.class);
+    private void listarAlojamientos( DtFiltrosAloj filtros ){
+        IAmqApi amqApi = AMQEndpoint.getIAmqApi();
 
-        /*=>*/
-        Call<List<Producto>> call = productoAPI.findList(codigo);
-        call.enqueue( new Callback<List<Producto>>(){
-
+        Call<List<DtAlojamiento>> call = amqApi.listarAlojamientos(filtros);
+        call.enqueue( new Callback<List<DtAlojamiento>>(){
             @Override
-            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
-                try{
-                    if(response.isSuccessful()){
-                        List<Producto> p = response.body();
-                        Log.d("listado: ", p.toString());
-                    }
-                }catch(Exception e){
-                    Toast.makeText(ListarAlojamientos.this.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+            public void onResponse(Call<List<DtAlojamiento>> call, Response<List<DtAlojamiento>> response) {
+                List<DtAlojamiento> alojamientos = response.body();
+
+                gridViewAloj = (GridView) getView().findViewById(R.id.gridViewAloj);
+                GridViewAdapterAlojamiento customAdapter = new GridViewAdapterAlojamiento(
+                        alojamientos, getActivity()
+                );
+                gridViewAloj.setAdapter(customAdapter);
+
+                Log.d(">>>>>>>", "onResponse: H!");
             }
 
-
             @Override
-            public void onFailure(Call<List<Producto>> call, Throwable t) {
-                Toast.makeText(ListarAlojamientos.this.getContext(), "la red ta muerta", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<List<DtAlojamiento>> call, Throwable t) {
+
             }
         });
     }
