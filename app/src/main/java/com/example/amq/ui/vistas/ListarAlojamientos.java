@@ -7,28 +7,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.amq.MainActivity;
 import com.example.amq.R;
-import com.example.amq.gridViewAdapters.GridViewAdapter;
-import com.example.amq.models.DtAlojamiento;
-import com.example.amq.models.DtFiltrosAlojamiento;
-import com.example.amq.rest.EndpointAMQ;
+import com.example.amq.models.Producto;
 import com.example.amq.rest.IAmqApi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,7 +36,11 @@ import retrofit2.Response;
  */
 public class ListarAlojamientos extends Fragment {
 
-    GridView alojsGridView;
+    EditText edtCodigo;
+    TextView tvNombre;
+    TextView tvDescripcion;
+    TextView tvPrecio;
+    Button btnBuscar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,6 +81,9 @@ public class ListarAlojamientos extends Fragment {
                 System.out.println(resultB);
             }
         });
+
+
+
     }
 
     @Override
@@ -86,44 +92,55 @@ public class ListarAlojamientos extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listar_alojamientos, container, false);
 
+        edtCodigo = (EditText) view.findViewById(R.id.edtCodigo);
+        tvNombre = (TextView) view.findViewById(R.id.tvNombre);
+        tvDescripcion = (TextView) view.findViewById(R.id.tvDescripcion);
+        tvPrecio = (TextView) view.findViewById(R.id.tvPrecio);
+        btnBuscar = (Button) view.findViewById(R.id.btnBuscar);
+
+        btnBuscar.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                find(edtCodigo.getText().toString());
+            }
+        });
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        find("aa");
+        text = view.findViewById(R.id.edtCodigo);
     }
 
     private void find( String codigo ){
-        IAmqApi iAmqApi = EndpointAMQ.getIAmqApi();
+        Retrofit retrofit  = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.3:8080/")
+                .addConverterFactory( GsonConverterFactory.create() )
+                .build();
 
-        DtFiltrosAlojamiento filtrosAloj = new DtFiltrosAlojamiento(true);
+        IAmqApi productoAPI = retrofit.create(IAmqApi.class);
+
         /*=>*/
-        Call<List<DtAlojamiento>> call = iAmqApi.listarAlojamientos( filtrosAloj);
-        call.enqueue( new Callback<List<DtAlojamiento>>(){
+        Call<List<Producto>> call = productoAPI.findList(codigo);
+        call.enqueue( new Callback<List<Producto>>(){
 
             @Override
-            public void onResponse(Call<List<DtAlojamiento>> call, Response<List<DtAlojamiento>> response) {
+            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
                 try{
                     if(response.isSuccessful()){
-                        alojsGridView = (GridView) getView().findViewById(R.id.gridViewAloj);
-                        List<DtAlojamiento> listaAlojs = response.body();
-
-                        GridViewAdapter gridAdapter = new GridViewAdapter(
-                                getActivity().getApplicationContext(), listaAlojs);
-
-                        alojsGridView.setAdapter(gridAdapter);
+                        List<Producto> p = response.body();
+                        Log.d("listado: ", p.toString());
                     }
                 }catch(Exception e){
-                    Toast.makeText(ListarAlojamientos.this.getContext(), e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListarAlojamientos.this.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
 
             @Override
-            public void onFailure(Call<List<DtAlojamiento>> call, Throwable t) {
+            public void onFailure(Call<List<Producto>> call, Throwable t) {
                 Toast.makeText(ListarAlojamientos.this.getContext(), "la red ta muerta", Toast.LENGTH_SHORT).show();
             }
         });
