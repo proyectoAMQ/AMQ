@@ -73,9 +73,8 @@ public class ListarAlojamientos extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-//            pais = Integer.parseInt( getArguments().getString(ARG_PAIS) );
-//Hardcoded hasta corregir pais por id=>
-pais=1;
+            pais = getArguments().getInt(ARG_PAIS) ;
+
             if (getArguments().getString(ARG_RANGO_PRECIO).equals("0-50 U$D")){
                 rangoPrecioDesde = 0;
                 rangoPrecioHasta = 50;
@@ -135,7 +134,7 @@ pais=1;
                 List<DtAlojamiento> alojamientos = response.body();
 
                 if(response.code()!=200){
-                    listarAlojamientoMensaje.setText("No se encontraron mensajes.");
+                    listarAlojamientoMensaje.setText("No se encontraron alojamientos.");
                 }
                 else{
                     gridViewAloj = (GridView) getView().findViewById(R.id.gridViewAloj);
@@ -152,5 +151,4 @@ pais=1;
             }
         });
     }
-
 }
