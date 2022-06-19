@@ -38,4 +38,13 @@
             android:name="precio"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/infoAlojHab"
+        android:name="com.example.amq.ui.vistas.InfoAlojHab"
+        android:label="fragment_info_aloj_hab"
+        tools:layout="@layout/fragment_info_aloj_hab" >
+        <argument
+            android:name="idHabitacion"
+            app:argType="integer" />
+    </fragment>
 </navigation>

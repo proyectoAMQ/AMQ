@@ -1,5 +1,6 @@
 package com.example.amq.rest;
 
+import com.example.amq.models.DtAlojHab;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtPais;
@@ -20,4 +21,6 @@ public interface IAmqApi {
     @GET("alojamiento/getPaises")
     public Call<List<DtPais>> getPaises();
 
+    @GET("/alojamiento/buscarAlojamientoHab/{id}")
+    public Call<DtAlojHab> buscarAlojamientoHab(@Path("id") int id );
 }

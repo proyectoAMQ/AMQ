@@ -82,8 +82,8 @@ public class GridViewAdapterAlojamiento extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("idHabitacion", String.valueOf(hab.getId() ) );
-                        Navigation.findNavController(view).navigate(R.id.navigation_home, bundle);
+                        bundle.putInt("idHabitacion", hab.getId() ) ;
+                        Navigation.findNavController(view).navigate(R.id.infoAlojHab, bundle);
                     }
                 });
 

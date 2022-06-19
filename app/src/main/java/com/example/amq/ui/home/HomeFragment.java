@@ -51,7 +51,6 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        this.listarPaises();
         return root;
     }
 
@@ -80,6 +79,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+
         Spinner precio = view.findViewById(R.id.dropPrecio);
         String[] itemsR = new String[]{"0-50 U$D", "51-100 U$D", "101-200 U$D", "201-300 U$D", "+301 U$D"};
         ArrayAdapter<String> adapterR = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, itemsR);
@@ -96,6 +97,9 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+
+        listarPaises(view);
 
         Button buscar = view.findViewById(R.id.buscarAlojamientos);
         buscar.setOnClickListener(new View.OnClickListener() {
@@ -116,8 +120,7 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-    private void listarPaises(){
-        List<String> paisesRET = new ArrayList<String>();
+    private void listarPaises( View view ){
         IAmqApi amqApi = AMQEndpoint.getIAmqApi();
 
         Call<List<DtPais>> call = amqApi.getPaises();
@@ -126,8 +129,28 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<DtPais>> call, Response<List<DtPais>> response) {
                paisesDT = response.body();
                for (DtPais p : paisesDT){
-                   paisesRET.add(p.getNombre());
+                   paises.add(p.getNombre());
                }
+                Spinner paisesView = view.findViewById(R.id.dropPais);
+
+                String[] itemsR = new String[paises.size()];
+                itemsR = paises.toArray( itemsR );
+
+                ArrayAdapter<String> adapterR = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, paises);
+                paisesView.setAdapter(adapterR);
+                paisesView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Log.e("id pais", (String) parent.getItemAtPosition(position));
+                        Log.e("id pais", String.valueOf(position ) );
+                        paisR = getIdPais( (String) parent.getItemAtPosition(position) );
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
             }
 
             @Override
@@ -135,5 +158,14 @@ public class HomeFragment extends Fragment {
                 Log.d("Fail", "Fallo");
             }
         });
+    }
+
+    private int getIdPais(String nombrePais){
+        for(DtPais p : paisesDT){
+            if( p.getNombre()!=null &&  p.getNombre().equals(nombrePais)){
+                return p.getId();
+            }
+        }
+        return 0;
     }
 }
