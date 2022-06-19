@@ -77,7 +77,7 @@ public class ListarAlojamientos extends Fragment {
 //Hardcoded hasta corregir pais por id=>
 pais=1;
             if (getArguments().getString(ARG_RANGO_PRECIO).equals("0-50 U$D")){
-                rangoPrecioDesde = null;
+                rangoPrecioDesde = 0;
                 rangoPrecioHasta = 50;
             } else if (getArguments().getString(ARG_RANGO_PRECIO).equals("51-100 U$D")){
                 rangoPrecioDesde = 51;
@@ -90,7 +90,7 @@ pais=1;
                 rangoPrecioHasta = 300;
             }else if (getArguments().getString(ARG_RANGO_PRECIO).equals("+301 U$D")){
                 rangoPrecioDesde = 301;
-                rangoPrecioHasta = 1000;
+                rangoPrecioHasta = 1000000;
             }
 
             dtFiltrosAloj = new DtFiltrosAloj(true, rangoPrecioDesde, rangoPrecioHasta, pais );
@@ -103,9 +103,6 @@ pais=1;
                 System.out.println(resultB);
             }
         });
-
-
-
     }
 
     @Override

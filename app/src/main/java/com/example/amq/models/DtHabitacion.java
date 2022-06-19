@@ -7,7 +7,9 @@ public class DtHabitacion {
 	private Double precioNoche;
 	private int camas;
 	private DtServicios dtservicios;
-	
+
+	public DtHabitacion(){}
+
 	public DtHabitacion(int id, String descripcion, Double precioNoche, int camas, 
 			DtServicios dtservicios) {
 		super();
