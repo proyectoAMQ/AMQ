@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -18,14 +19,28 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
 import com.example.amq.R;
 import com.example.amq.databinding.FragmentHomeBinding;
+import com.example.amq.models.DtAlojamiento;
+import com.example.amq.models.DtFiltrosAloj;
+import com.example.amq.models.DtPais;
+import com.example.amq.rest.AMQEndpoint;
+import com.example.amq.rest.IAmqApi;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    private String estrellasR;
-    private String paisR;
+    private int paisR;
     private String rangoR;
+    private List<String> paises = new ArrayList<String>();
+    private List<DtPais> paisesDT = new ArrayList<DtPais>();
 
     private FragmentHomeBinding binding;
 
@@ -36,6 +51,7 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        this.listarPaises();
         return root;
     }
 
@@ -44,32 +60,18 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
 
-        Spinner estrellas = view.findViewById(R.id.dropEstrellas);
-        String[] items = new String[]{"1", "2", "3", "4", "5"};
-        ArrayAdapter<String> adapterE = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, items);
-        estrellas.setAdapter(adapterE);
-        estrellas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.v("estrellas", (String) parent.getItemAtPosition(position));
-                estrellasR = (String) parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         Spinner pais = view.findViewById(R.id.dropPais);
-        String[] itemsPRUEBA = new String[]{"URUGUAY", "ARGENTINA", "BRASIL"};
-        ArrayAdapter<String> adapterP = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, itemsPRUEBA);
+        ArrayAdapter<String> adapterP = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, paises);
         pais.setAdapter(adapterP);
         pais.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.v("pais", (String) parent.getItemAtPosition(position));
-                paisR = (String) parent.getItemAtPosition(position);
+                for (DtPais p : paisesDT) {
+                    if (p.getNombre().equals((String) parent.getItemAtPosition(position))) {
+                        paisR = p.getId();
+                    }
+                }
             }
 
             @Override
@@ -100,8 +102,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("estrellas", estrellasR);
-                bundle.putString("pais", paisR);
+                bundle.putInt("pais", paisR);
                 bundle.putString("rango", rangoR);
                 navController.navigate(R.id.action_navigation_home_to_listarAlojamientos, bundle);
 
@@ -113,5 +114,26 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void listarPaises(){
+        List<String> paisesRET = new ArrayList<String>();
+        IAmqApi amqApi = AMQEndpoint.getIAmqApi();
+
+        Call<List<DtPais>> call = amqApi.getPaises();
+        call.enqueue( new Callback<List<DtPais>>(){
+            @Override
+            public void onResponse(Call<List<DtPais>> call, Response<List<DtPais>> response) {
+               paisesDT = response.body();
+               for (DtPais p : paisesDT){
+                   paisesRET.add(p.getNombre());
+               }
+            }
+
+            @Override
+            public void onFailure(Call<List<DtPais>> call, Throwable t) {
+                Log.d("Fail", "Fallo");
+            }
+        });
     }
 }

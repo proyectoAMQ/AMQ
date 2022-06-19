@@ -43,14 +43,12 @@ public class ListarAlojamientos extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_EST = "estrellas";
     private static final String ARG_PAIS = "pais";
     private static final String ARG_RANGO = "rango";
     TextView text;
 
     // TODO: Rename and change types of parameters
-    private int estrellas;
-    private String pais;
+    private int pais;
     private int rangoDesde;
     private int rangoHasta;
 
@@ -59,11 +57,10 @@ public class ListarAlojamientos extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ListarAlojamientos newInstance(String estrellas, String pais, String rango) {
+    public static ListarAlojamientos newInstance(int pais, String rango) {
         ListarAlojamientos fragment = new ListarAlojamientos();
         Bundle args = new Bundle();
-        args.putString(ARG_EST, estrellas);
-        args.putString(ARG_PAIS, pais);
+        args.putInt(ARG_PAIS, pais);
         args.putString(ARG_RANGO, rango);
         fragment.setArguments(args);
         return fragment;
@@ -73,8 +70,7 @@ public class ListarAlojamientos extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            estrellas = Integer.parseInt(getArguments().getString(ARG_EST));
-            pais = getArguments().getString(ARG_PAIS);
+            pais = getArguments().getInt(ARG_PAIS);
             if (getArguments().getString(ARG_RANGO).equals("0-50 U$D")){
                 rangoDesde = 0;
                 rangoHasta = 50;
@@ -87,16 +83,15 @@ public class ListarAlojamientos extends Fragment {
             }else if (getArguments().getString(ARG_RANGO).equals("201-300 U$D")){
                 rangoDesde = 201;
                 rangoHasta = 300;
-            }else if (getArguments().getString(ARG_RANGO).equals("+301 U$D")){
+            }else if (getArguments().getString(ARG_RANGO).equals("+301 U$D")) {
                 rangoDesde = 301;
                 rangoHasta = 1000;
             }
-            Log.v("estrellasList", String.valueOf(estrellas));
-            Log.v("paisList", pais);
+            Log.v("paisList", String.valueOf(pais));
             Log.v("rangoDList", String.valueOf(rangoDesde));
             Log.v("rangoHList", String.valueOf(rangoHasta));
-
         }
+
         getParentFragmentManager().setFragmentResultListener("key", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {

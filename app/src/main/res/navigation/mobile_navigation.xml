@@ -32,11 +32,8 @@
         android:label="fragment_listar_alojamientos"
         tools:layout="@layout/fragment_listar_alojamientos" >
         <argument
-            android:name="estrellas"
-            app:argType="string" />
-        <argument
             android:name="pais"
-            app:argType="string" />
+            app:argType="integer" />
         <argument
             android:name="precio"
             app:argType="string" />

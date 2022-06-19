@@ -2,6 +2,7 @@ package com.example.amq.rest;
 
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtFiltrosAloj;
+import com.example.amq.models.DtPais;
 
 import java.util.List;
 
@@ -15,5 +16,8 @@ public interface IAmqApi {
 
     @POST("alojamiento/listarAlojamientos")
     public Call<List<DtAlojamiento>> listarAlojamientos(@Body DtFiltrosAloj dtFiltros);
+
+    @GET("alojamiento/getPaises")
+    public Call<List<DtPais>> getPaises();
 
 }
