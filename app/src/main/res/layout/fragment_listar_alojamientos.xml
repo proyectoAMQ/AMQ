@@ -5,10 +5,15 @@
     android:orientation="vertical"
     tools:context=".ui.vistas.ListarAlojamientos" >
 
+    <TextView
+        android:id="@+id/ListarAlojamientosMensaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <GridView
         android:id="@+id/gridViewAloj"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:numColumns="1"/>
 
 

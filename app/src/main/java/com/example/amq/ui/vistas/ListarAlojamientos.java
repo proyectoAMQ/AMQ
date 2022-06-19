@@ -40,28 +40,31 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ListarAlojamientos extends Fragment {
 
     GridView gridViewAloj;
+    TextView listarAlojamientoMensaje;
+    DtFiltrosAloj dtFiltrosAloj;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PAIS = "pais";
-    private static final String ARG_RANGO = "rango";
+    private static final String ARG_RANGO_PRECIO = "rango";
     TextView text;
 
     // TODO: Rename and change types of parameters
     private int pais;
-    private int rangoDesde;
-    private int rangoHasta;
+    private Integer rangoPrecioDesde;
+    private Integer rangoPrecioHasta;
 
     public ListarAlojamientos() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ListarAlojamientos newInstance(int pais, String rango) {
+    public static ListarAlojamientos newInstance(String estrellas, String pais, String rango) {
         ListarAlojamientos fragment = new ListarAlojamientos();
         Bundle args = new Bundle();
-        args.putInt(ARG_PAIS, pais);
-        args.putString(ARG_RANGO, rango);
+        args.putString(ARG_PAIS, pais);
+
+        args.putString(ARG_RANGO_PRECIO, rango);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,28 +73,28 @@ public class ListarAlojamientos extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            pais = getArguments().getInt(ARG_PAIS);
-            if (getArguments().getString(ARG_RANGO).equals("0-50 U$D")){
-                rangoDesde = 0;
-                rangoHasta = 50;
-            } else if (getArguments().getString(ARG_RANGO).equals("51-100 U$D")){
-                rangoDesde = 51;
-                rangoHasta = 100;
-            }else if (getArguments().getString(ARG_RANGO).equals("101-200 U$D")){
-                rangoDesde = 101;
-                rangoHasta = 200;
-            }else if (getArguments().getString(ARG_RANGO).equals("201-300 U$D")){
-                rangoDesde = 201;
-                rangoHasta = 300;
-            }else if (getArguments().getString(ARG_RANGO).equals("+301 U$D")) {
-                rangoDesde = 301;
-                rangoHasta = 1000;
+//            pais = Integer.parseInt( getArguments().getString(ARG_PAIS) );
+//Hardcoded hasta corregir pais por id=>
+pais=1;
+            if (getArguments().getString(ARG_RANGO_PRECIO).equals("0-50 U$D")){
+                rangoPrecioDesde = 0;
+                rangoPrecioHasta = 50;
+            } else if (getArguments().getString(ARG_RANGO_PRECIO).equals("51-100 U$D")){
+                rangoPrecioDesde = 51;
+                rangoPrecioHasta = 100;
+            }else if (getArguments().getString(ARG_RANGO_PRECIO).equals("101-200 U$D")){
+                rangoPrecioDesde = 101;
+                rangoPrecioHasta = 200;
+            }else if (getArguments().getString(ARG_RANGO_PRECIO).equals("201-300 U$D")){
+                rangoPrecioDesde = 201;
+                rangoPrecioHasta = 300;
+            }else if (getArguments().getString(ARG_RANGO_PRECIO).equals("+301 U$D")){
+                rangoPrecioDesde = 301;
+                rangoPrecioHasta = 1000000;
             }
-            Log.v("paisList", String.valueOf(pais));
-            Log.v("rangoDList", String.valueOf(rangoDesde));
-            Log.v("rangoHList", String.valueOf(rangoHasta));
-        }
 
+            dtFiltrosAloj = new DtFiltrosAloj(true, rangoPrecioDesde, rangoPrecioHasta, pais );
+        }
         getParentFragmentManager().setFragmentResultListener("key", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
@@ -100,9 +103,6 @@ public class ListarAlojamientos extends Fragment {
                 System.out.println(resultB);
             }
         });
-
-
-
     }
 
     @Override
@@ -112,6 +112,7 @@ public class ListarAlojamientos extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listar_alojamientos, container, false);
 
         gridViewAloj = (GridView) view.findViewById(R.id.gridViewAloj);
+        listarAlojamientoMensaje = (TextView) view.findViewById(R.id.ListarAlojamientosMensaje);
 
         return view;
     }
@@ -120,8 +121,7 @@ public class ListarAlojamientos extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DtFiltrosAloj filtros = new DtFiltrosAloj(true);
-        listarAlojamientos(filtros);
+        listarAlojamientos(dtFiltrosAloj);
     }
 
 
@@ -131,21 +131,24 @@ public class ListarAlojamientos extends Fragment {
         Call<List<DtAlojamiento>> call = amqApi.listarAlojamientos(filtros);
         call.enqueue( new Callback<List<DtAlojamiento>>(){
             @Override
-            public void onResponse(Call<List<DtAlojamiento>> call, Response<List<DtAlojamiento>> response) {
+            public void onResponse(Call< List<DtAlojamiento> > call, Response<List<DtAlojamiento>> response) {
                 List<DtAlojamiento> alojamientos = response.body();
 
-                gridViewAloj = (GridView) getView().findViewById(R.id.gridViewAloj);
-                GridViewAdapterAlojamiento customAdapter = new GridViewAdapterAlojamiento(
-                        alojamientos, getActivity()
-                );
-                gridViewAloj.setAdapter(customAdapter);
-
-                Log.d(">>>>>>>", "onResponse: H!");
+                if(response.code()!=200){
+                    listarAlojamientoMensaje.setText("No se encontraron mensajes.");
+                }
+                else{
+                    gridViewAloj = (GridView) getView().findViewById(R.id.gridViewAloj);
+                    GridViewAdapterAlojamiento customAdapter = new GridViewAdapterAlojamiento(
+                            alojamientos, getActivity()
+                    );
+                    gridViewAloj.setAdapter(customAdapter);
+                }
             }
 
             @Override
             public void onFailure(Call<List<DtAlojamiento>> call, Throwable t) {
-
+                Log.d("error>",t.toString());
             }
         });
     }

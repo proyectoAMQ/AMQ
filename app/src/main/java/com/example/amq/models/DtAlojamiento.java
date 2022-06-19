@@ -1,5 +1,6 @@
 package com.example.amq.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DtAlojamiento {
@@ -9,17 +10,17 @@ public class DtAlojamiento {
 	private String descripcion;
 	private DtDireccion direcion;
 	private String nombre;
-	private List<DtHabitacion> habitaciones;
+	private ArrayList<DtHabitacion> habs;
 
 	public DtAlojamiento(Integer id,Boolean activo, String descripcion, DtDireccion direcion, 
-			String nombre, List<DtHabitacion> habitaciones ) {
+			String nombre, ArrayList<DtHabitacion> habs ) {
 		super();
 		this.id = id;
 		this.activo = activo;
 		this.descripcion = descripcion;
 		this.direcion = direcion;
 		this.nombre = nombre;
-		this.habitaciones = habitaciones;
+		this.habs = habs;
 	}
 	
 	public Integer getId() {
@@ -67,10 +68,10 @@ public class DtAlojamiento {
 	}
 
 	public List<DtHabitacion> getHabs() {
-		return habitaciones;
+		return habs;
 	}
 
-	public void setHabs(List<DtHabitacion> habitaciones) {
-		this.habitaciones = habitaciones;
+	public void setHabs(ArrayList<DtHabitacion> habs) {
+		this.habs = habs;
 	}
 }
