@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/listarAlojamientos"
         android:name="com.example.amq.ui.vistas.ListarAlojamientos"
-        android:label="fragment_listar_alojamientos"
+        android:label="Alojamientos"
         tools:layout="@layout/fragment_listar_alojamientos" >
         <argument
             android:name="pais"
@@ -41,10 +41,15 @@
     <fragment
         android:id="@+id/infoAlojHab"
         android:name="com.example.amq.ui.vistas.InfoAlojHab"
-        android:label="fragment_info_aloj_hab"
+        android:label="Información de alojamiento"
         tools:layout="@layout/fragment_info_aloj_hab" >
-        <argument
-            android:name="idHabitacion"
-            app:argType="integer" />
+        <argument android:name="idHabitacion"  app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/reservar_fragment"
+        android:name="com.example.amq.ui.vistas.Reservar"
+        android:label="Relizar reserva"
+        tools:layout="@layout/fragment_reservar" >
+        <argument android:name="idHabitacion"  app:argType="integer" />
     </fragment>
 </navigation>

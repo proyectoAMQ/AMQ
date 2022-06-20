@@ -9,4 +9,6 @@
     <string name="info_hab">Información de alojamiento</string>
     <string name="nombre">Nombre:</string>
     <string name="aloj_desc">Descripción:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
