@@ -5,12 +5,17 @@
       <map>
         <entry key="app/src/main/res/layout/activity_listar_alojamientos.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.26708836209946785" />
+        <entry key="app/src/main/res/layout/activity_pago.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout/activity_pago_brain_tree.xml" value="0.23489583333333333" />
+        <entry key="app/src/main/res/layout/activity_payment_details.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.3115942028985507" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_info_aloj_hab.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_listado_alojamientos.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/fragment_listar_alojamientos.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.11423505572441743" />
+        <entry key="app/src/main/res/layout/fragment_pago.xml" value="0.18802083333333333" />
         <entry key="app/src/main/res/layout/fragment_realizar_reserva.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/fragment_reservar.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/grid_view_item.xml" value="0.10891590678824721" />

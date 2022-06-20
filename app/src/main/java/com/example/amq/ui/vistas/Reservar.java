@@ -1,11 +1,13 @@
 package com.example.amq.ui.vistas;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,8 @@ public class Reservar extends Fragment {
     private Calendar calFFin;
     private String fFin = null;
     private Integer cantDias = null;
+
+    SharedPreferences.Editor prefEditor;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -74,12 +78,16 @@ public class Reservar extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext());
+        prefEditor = preferences.edit();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_reservar, container, false);
     }
 
@@ -95,16 +103,16 @@ public class Reservar extends Fragment {
                 fInicio =String.valueOf(year)+"-"+
                                 (month<10?"0":"" )+ String.valueOf(month+1)+"-"+
                                 (day<10?"0":"" )+ String.valueOf(day);
-
                 calFInicio = Calendar.getInstance();
                 calFInicio.set(year, month, day);
                 if( calFFin!=null ){
                     long milisDif = calFFin.getTimeInMillis() - calFInicio.getTimeInMillis();
                     cantDias = (int) TimeUnit.MILLISECONDS.toDays(Math.abs(milisDif)) + 1;
 
+
+                    prefEditor.putInt("cantDias", cantDias );
                     Log.i("Dias", String.valueOf(cantDias) );
                 }
-
                 Log.i("Fecha Inicio", fInicio);
             }
         });
@@ -131,7 +139,9 @@ public class Reservar extends Fragment {
             public void onClick(View view) {
                 Log.i("Fecha inicio:", fInicio );
                 Log.i("Fecha fin", fFin );
+                prefEditor.putString("fInicio", fInicio );
+                prefEditor.putString("fFin", fFin );
             }
-        } );
+        });
     }
 }

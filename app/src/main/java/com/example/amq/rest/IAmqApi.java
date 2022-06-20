@@ -3,7 +3,9 @@ package com.example.amq.rest;
 import com.example.amq.models.DtAlojHab;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtFiltrosAloj;
+import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtPais;
+import com.example.amq.models.DtUsuario;
 
 import java.util.List;
 
@@ -23,4 +25,7 @@ public interface IAmqApi {
 
     @GET("/alojamiento/buscarAlojamientoHab/{id}")
     public Call<DtAlojHab> buscarAlojamientoHab(@Path("id") int id );
+
+    @POST("/usuario/login")
+    public Call<DtUsuario> login(@Body DtLogin dtLogin );
 }

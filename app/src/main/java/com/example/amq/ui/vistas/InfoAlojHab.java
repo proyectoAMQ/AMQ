@@ -1,5 +1,6 @@
 package com.example.amq.ui.vistas;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +94,11 @@ public class InfoAlojHab extends Fragment {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("idHabitacion", idHab ) ;
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt("idHab", idHab );
+
                 Navigation.findNavController(view).navigate(R.id.reservar_fragment, bundle);
             }
         });
