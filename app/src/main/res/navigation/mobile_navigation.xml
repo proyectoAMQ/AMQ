@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/login_fragment">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -51,5 +51,12 @@
         android:label="Relizar reserva"
         tools:layout="@layout/fragment_reservar" >
         <argument android:name="idHabitacion"  app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="com.example.amq.ui.vistas.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" >
     </fragment>
 </navigation>

@@ -1,11 +1,13 @@
 package com.example.amq.ui.vistas;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +82,14 @@ public class Reservar extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String email = preferences.getString("emailUsuario", "");
+        Log.i("Email", email);
+
+
+
+
         return inflater.inflate(R.layout.fragment_reservar, container, false);
     }
 

@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/layout/fragment_info_aloj_hab.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_listado_alojamientos.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/fragment_listar_alojamientos.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.11423505572441743" />
         <entry key="app/src/main/res/layout/fragment_realizar_reserva.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/fragment_reservar.xml" value="0.19067028985507245" />
