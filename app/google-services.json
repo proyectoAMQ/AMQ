@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "966476705725",
+    "project_id": "proyectofing-a7930",
+    "storage_bucket": "proyectofing-a7930.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966476705725:android:66184f3ff3fb6d06b8acd4",
+        "android_client_info": {
+          "package_name": "com.example.amq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966476705725-asmbv8k7l28oo8k68rn3i1a0eldds1od.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1km-eN1EkA7tWawD517Zqwd1xrQT7Zw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966476705725-asmbv8k7l28oo8k68rn3i1a0eldds1od.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

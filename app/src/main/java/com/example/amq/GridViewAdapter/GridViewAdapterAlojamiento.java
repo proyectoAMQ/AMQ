@@ -83,6 +83,7 @@ public class GridViewAdapterAlojamiento extends BaseAdapter {
                     public void onClick(View view) {
                         Bundle bundle = new Bundle();
                         bundle.putInt("idHabitacion", hab.getId() ) ;
+                        bundle.putString("nomAloj", dtAlojs.get(i).getNombre());
                         Navigation.findNavController(view).navigate(R.id.infoAlojHab, bundle);
                     }
                 });
