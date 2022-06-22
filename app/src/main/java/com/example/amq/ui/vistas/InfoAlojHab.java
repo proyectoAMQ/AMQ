@@ -12,14 +12,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.amq.R;
 import com.example.amq.models.DtAlojHab;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.play.core.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,6 +53,9 @@ import retrofit2.Response;
 public class InfoAlojHab extends Fragment {
     private DtAlojHab dtAlojHab;
     private int idHab;
+    private String nomAloj;
+    ImageSlider slider;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,6 +93,7 @@ public class InfoAlojHab extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             idHab = getArguments().getInt("idHabitacion");
+            nomAloj = getArguments().getString("nomAloj");
         }
     }
 
@@ -85,6 +108,22 @@ public class InfoAlojHab extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        slider = view.findViewById(R.id.image_slider);
+        final List<SlideModel> imagenesFire = new ArrayList<>();
+        Log.d("Aloj: ", nomAloj);
+        db.collection("fotos").document(nomAloj).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url1"), "Foto 1", ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url2"), "Foto 2", ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url3"), "Foto 3", ScaleTypes.FIT));
+                    slider.setImageList(imagenesFire, ScaleTypes.FIT);
+                }
+            }
+        });
+
 
         Button btnReservar = (Button) getView().findViewById(R.id.info_btnReservar);
         btnReservar.setOnClickListener(new View.OnClickListener() {
