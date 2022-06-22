@@ -2,6 +2,7 @@ package com.example.amq.rest;
 
 import com.example.amq.models.DtAlojHab;
 import com.example.amq.models.DtAlojamiento;
+import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtPais;
@@ -28,4 +29,7 @@ public interface IAmqApi {
 
     @POST("/usuario/login")
     public Call<DtUsuario> login(@Body DtLogin dtLogin );
+    
+    @POST("/reserva/alta")
+    public Call<Object> altaReserva(@Body DtAltaReserva dtAltaReserva );
 }

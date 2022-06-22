@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
 import com.example.amq.R;

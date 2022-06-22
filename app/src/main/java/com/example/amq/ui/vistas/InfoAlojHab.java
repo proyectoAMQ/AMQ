@@ -98,6 +98,7 @@ public class InfoAlojHab extends Fragment {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt("idHab", idHab );
+                editor.apply();
 
                 Navigation.findNavController(view).navigate(R.id.reservar_fragment, bundle);
             }

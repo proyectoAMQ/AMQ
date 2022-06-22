@@ -122,16 +122,10 @@ public class LoginFragment extends Fragment {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("emailUsuario", usr.getEmail());
-<<<<<<< HEAD
                             editor.putInt("idUsuario", usr.getId());
                             editor.apply();
 
-                            Navigation.findNavController(view).navigate(R.id.pago_activity, new Bundle() );
-=======
-                            editor.apply();
-
                             Navigation.findNavController(view).navigate(R.id.navigation_home, new Bundle() );
->>>>>>> origin/main
 
                             Log.i("Usuario logueado", usr.getEmail() );
                         }

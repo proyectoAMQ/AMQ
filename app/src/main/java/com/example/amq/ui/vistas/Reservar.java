@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -14,12 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.Toast;
 
 import com.example.amq.R;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 
@@ -37,7 +37,7 @@ public class Reservar extends Fragment {
     private String fFin = null;
     private Integer cantDias = null;
 
-    SharedPreferences.Editor prefEditor;
+    SharedPreferences.Editor editor;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -80,7 +80,8 @@ public class Reservar extends Fragment {
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext());
-        prefEditor = preferences.edit();
+        editor = preferences.edit();
+        editor.apply();
     }
 
     @Override
@@ -110,7 +111,8 @@ public class Reservar extends Fragment {
                     cantDias = (int) TimeUnit.MILLISECONDS.toDays(Math.abs(milisDif)) + 1;
 
 
-                    prefEditor.putInt("cantDias", cantDias );
+                    editor.putInt("cantDias", cantDias );
+                    editor.apply();
                     Log.i("Dias", String.valueOf(cantDias) );
                 }
                 Log.i("Fecha Inicio", fInicio);
@@ -122,6 +124,7 @@ public class Reservar extends Fragment {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView
                     , int year, int month, int day) {
+
                 fFin =String.valueOf(year)+"-"+
                         (month<10?"0":"" )+ String.valueOf(month+1)+"-"+
                         (day<10?"0":"" )+ String.valueOf(day);
@@ -130,6 +133,7 @@ public class Reservar extends Fragment {
 
 
                 Log.i("Fecha Fin", fFin);
+
             }
         });
 
@@ -137,10 +141,20 @@ public class Reservar extends Fragment {
         btnConfirmar.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.i("Fecha inicio:", fInicio );
-                Log.i("Fecha fin", fFin );
-                prefEditor.putString("fInicio", fInicio );
-                prefEditor.putString("fFin", fFin );
+                if( fInicio==null ){
+                    Toast.makeText(getActivity(),"Debe seleccionar una fecha de inicio",Toast.LENGTH_SHORT).show();
+                }
+                else if(fFin==null){
+                    Toast.makeText(getActivity(),"Debe seleccionar una fecha de fin",Toast.LENGTH_SHORT).show();
+                }else{
+                    Log.i("Fecha inicio:", fInicio );
+                    Log.i("Fecha fin", fFin );
+                    editor.putString("fInicio", fInicio );
+                    editor.putString("fFin", fFin );
+                    editor.apply();
+
+                    Navigation.findNavController(view).navigate(R.id.pago_activity, new Bundle() );
+                }
             }
         });
     }
