@@ -16,6 +16,12 @@
         android:theme="@style/Theme.AMQ"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.vistas.PagoOK"
+            android:exported="false" />
+        <activity
+            android:name=".ui.vistas.PagoError"
+            android:exported="false" />
         <!--
                 <activity
             android:name=".ListarAlojamientos"
@@ -44,8 +50,7 @@
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.vistas.Pago"
-            />
+        <activity android:name=".ui.vistas.Pago" />
     </application>
 
 </manifest>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.vistas.PagoOK">
+
+    <TextView
+        android:id="@+id/resultadoPagoOK_texto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="El pago se realizó correctamente, notificaremos al anfitrión del alojamiento seleccionado para que confirme su reserva, presione OK para volver al inicio"/>
+    <Button
+        android:id="@+id/resultadoPagoOK_btnVolver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"/>
+
+</LinearLayout>
