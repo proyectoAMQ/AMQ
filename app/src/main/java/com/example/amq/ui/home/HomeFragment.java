@@ -27,6 +27,9 @@ import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtPais;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +112,6 @@ public class HomeFragment extends Fragment {
                 bundle.putInt("pais", paisR);
                 bundle.putString("rango", rangoR);
                 navController.navigate(R.id.action_navigation_home_to_listarAlojamientos, bundle);
-
             }
         });
     }
