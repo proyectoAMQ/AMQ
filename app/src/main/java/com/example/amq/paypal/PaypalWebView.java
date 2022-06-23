@@ -1,6 +1,7 @@
 package com.example.amq.paypal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -9,10 +10,13 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 
+import com.example.amq.MainActivity;
 import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtUsuario;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
+import com.example.amq.ui.vistas.PagoError;
+import com.example.amq.ui.vistas.PagoOK;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,10 +27,11 @@ public class PaypalWebView extends WebViewClient {
     @Override
     public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
         super.doUpdateVisitedHistory(view, url, isReload);
-        if( url.matches(".*OPERACION_CANCELADA.*") ){
-            //REDIRECT....
+        if( url.matches("(?i).*OPERACION_CANCELADA.*") ){
+            Intent intent = new Intent(view.getContext(), PagoError.class);
+            view.getContext().startActivity(intent);
         }
-        else if( url.matches(".*OPERACION_OK.*") ) {
+        else if( url.matches("(?i).*OPERACION_OK.*") ) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
 
             Log.i("emailUsuario", preferences.getString("emailUsuario", null));
@@ -52,12 +57,14 @@ public class PaypalWebView extends WebViewClient {
             call.enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
-                    Object o = response.body();
+                    Intent intent = new Intent(view.getContext(), PagoOK.class);
+                    view.getContext().startActivity(intent);
                 }
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable t) {
-                    Log.e("ALTA_RESERVA", t.getMessage());
+                    Intent intent = new Intent(view.getContext(), PagoError.class);
+                    view.getContext().startActivity(intent);
                 }
             });
         }

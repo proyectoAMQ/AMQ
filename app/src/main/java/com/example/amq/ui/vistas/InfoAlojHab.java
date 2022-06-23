@@ -57,7 +57,7 @@ public class InfoAlojHab extends Fragment {
     private int idHab;
     private String nomAloj;
     ImageSlider slider;
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -110,7 +110,6 @@ public class InfoAlojHab extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         slider = view.findViewById(R.id.image_slider);
         final List<SlideModel> imagenesFire = new ArrayList<>();

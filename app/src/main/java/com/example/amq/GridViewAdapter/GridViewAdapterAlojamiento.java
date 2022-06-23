@@ -65,7 +65,7 @@ public class GridViewAdapterAlojamiento extends BaseAdapter {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
                 if (id != 0) {
-                    //Posiciòn relativa al los items ya ingresados
+                    //Posición relativa al los items ya ingresados
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.addRule(RelativeLayout.BELOW, id);
                     nueva_habView.setLayoutParams(params);
@@ -92,10 +92,6 @@ public class GridViewAdapterAlojamiento extends BaseAdapter {
             }
 
         }
-
-
-
-
 
         TextView nombreAloj = (TextView) view.findViewById(R.id.nombreAloj);
         nombreAloj.setText( dtAlojs.get(i).getNombre() );
