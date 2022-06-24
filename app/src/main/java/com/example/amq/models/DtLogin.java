@@ -1,17 +1,16 @@
 package com.example.amq.models;
 
 public class DtLogin {
+
 	private String email;
 	private String pass;
-
-	public DtLogin() {
+	private String pushToken;
+	
+	public DtLogin(String email, String pass, String pushToken) {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public DtLogin(String email, String pass) {
 		this.email = email;
 		this.pass = pass;
+		this.pushToken = pushToken;
 	}
 
 	public String getEmail() {
@@ -29,4 +28,13 @@ public class DtLogin {
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
+
+	public String getPushToken() {
+		return pushToken;
+	}
+
+	public void setPushToken(String pushToken) {
+		this.pushToken = pushToken;
+	}
+
 }

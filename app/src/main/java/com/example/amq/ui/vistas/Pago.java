@@ -106,8 +106,8 @@ public class Pago extends Activity {
                 "AUTHORIZE",
                 purchaseUnits,
                 new ApplicationContext(
-                        "http://OPERACION_OK",
-                        "http://OPERACION_CANCELADA"
+                        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/White_Background_%28To_id_screen_dust_during_cleanup%29.jpg/1200px-White_Background_%28To_id_screen_dust_during_cleanup%29.jpg",
+                        "https://images.unsplash.com/photo-1565710545039-46c9a7d22959?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80"
                 )
         );
 

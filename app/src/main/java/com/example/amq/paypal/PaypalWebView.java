@@ -27,11 +27,13 @@ public class PaypalWebView extends WebViewClient {
     @Override
     public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
         super.doUpdateVisitedHistory(view, url, isReload);
-        if( url.matches("(?i).*OPERACION_CANCELADA.*") ){
+        //Url cancelado
+        if( url.matches("(?i).*DB8MHxwaG90by1wYWd.*") ){
             Intent intent = new Intent(view.getContext(), PagoError.class);
             view.getContext().startActivity(intent);
         }
-        else if( url.matches("(?i).*OPERACION_OK.*") ) {
+        //Url exito
+        else if( url.matches("(?i).*White_Background_.*") ) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
 
             Log.i("emailUsuario", preferences.getString("emailUsuario", null));

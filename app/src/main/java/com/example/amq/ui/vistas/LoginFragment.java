@@ -24,6 +24,11 @@ import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtUsuario;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceIdReceiver;
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -38,6 +43,8 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
+
+    private String pushToken;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,6 +84,22 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //Get firebase push token
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("Firebase", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        pushToken = task.getResult();
+                        Log.i("Push Token", pushToken);
+                    }
+                });
     }
 
     @Override
@@ -93,6 +116,7 @@ public class LoginFragment extends Fragment {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
         int idUsr = preferences.getInt("idUsuario", 0 );
 
+
         if(idUsr!=0){
             Navigation.findNavController(view).navigate(R.id.navigation_home, new Bundle() );
         }
@@ -108,7 +132,7 @@ public class LoginFragment extends Fragment {
 
                     String hash = android.util.Base64.encodeToString(pass.getBytes(), Base64.DEFAULT);
 
-                    DtLogin dtLogin = new DtLogin(email, hash);
+                    DtLogin dtLogin = new DtLogin(email, hash, pushToken);
 
                     IAmqApi amqApi = AMQEndpoint.getIAmqApi();
 
