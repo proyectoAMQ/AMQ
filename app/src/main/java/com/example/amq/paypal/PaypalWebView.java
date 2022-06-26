@@ -33,7 +33,7 @@ public class PaypalWebView extends WebViewClient {
             view.getContext().startActivity(intent);
         }
         //Url exito
-        else if( url.matches("(?i).*White_Background_.*") ) {
+        else if( url.matches("(?i).*White.*") ) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
 
             Log.i("emailUsuario", preferences.getString("emailUsuario", null));

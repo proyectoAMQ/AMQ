@@ -6,6 +6,7 @@ import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtPais;
+import com.example.amq.models.DtRegistroHuesped;
 import com.example.amq.models.DtUsuario;
 
 import java.util.List;
@@ -32,4 +33,7 @@ public interface IAmqApi {
     
     @POST("/reserva/alta")
     public Call<Object> altaReserva(@Body DtAltaReserva dtAltaReserva );
+
+    @POST("/usuario/altaHuesped")
+    public Call<Object> altaHuesped(@Body DtRegistroHuesped dtRegistroHuesped );
 }

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +54,7 @@ public class Pago extends Activity {
     private String access_token = "";
     private Object ArrayList;
     private WebView browser=null;
+    private ImageView loading=null;
     private Context context;
 
     // Called when the activity is first created.
@@ -64,9 +67,8 @@ public class Pago extends Activity {
 
         access_token = PaypalFunctions.getAccessToken();
 
-
         browser = findViewById(R.id.pago_browser);
-
+        loading = findViewById(R.id.pago_loading);
 
         browser.setWebViewClient(new PaypalWebView());
         IPaypalApi iPaypalApi = PaypalEndpoint.getIPaypalApi();
@@ -111,7 +113,6 @@ public class Pago extends Activity {
                 )
         );
 
-
         Call<DtOrderResponse> call = iPaypalApi.createOrder( access_token, order );
         call.enqueue( new Callback< DtOrderResponse >(){
             @Override
@@ -125,6 +126,9 @@ public class Pago extends Activity {
                 editor.apply();
 
                 browser.loadUrl(redirectLink);
+
+                browser.setVisibility(View.VISIBLE);
+                loading.setVisibility(View.INVISIBLE);
             }
 
             @Override
