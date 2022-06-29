@@ -22,9 +22,13 @@ import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
 import com.example.amq.R;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtFiltrosAloj;
+import com.example.amq.models.DtResHuespEstado;
+import com.example.amq.models.DtReservaAlojHab;
+import com.example.amq.models.ReservaEstado;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

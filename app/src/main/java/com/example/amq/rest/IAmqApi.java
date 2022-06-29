@@ -7,6 +7,8 @@ import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtPais;
 import com.example.amq.models.DtRegistroHuesped;
+import com.example.amq.models.DtResHuespEstado;
+import com.example.amq.models.DtReservaAlojHab;
 import com.example.amq.models.DtUsuario;
 
 import java.util.List;
@@ -18,7 +20,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface IAmqApi {
-
     @POST("alojamiento/listarAlojamientos")
     public Call<List<DtAlojamiento>> listarAlojamientos(@Body DtFiltrosAloj dtFiltros);
 
@@ -36,4 +37,7 @@ public interface IAmqApi {
 
     @POST("/usuario/altaHuesped")
     public Call<Object> altaHuesped(@Body DtRegistroHuesped dtRegistroHuesped );
+
+    @POST("/reserva/reservasXHuespXEstado")
+    public Call<List<DtReservaAlojHab>> listarReservas(@Body DtResHuespEstado dtResHuespEstado );
 }

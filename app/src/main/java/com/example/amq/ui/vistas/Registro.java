@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,11 +113,15 @@ public class Registro extends Fragment {
                     Toast.makeText(getContext(), toastMsj, Toast.LENGTH_LONG).show();
                 }
                 else{
+
+                    String hash = android.util.Base64
+                            .encodeToString(pass.getText().toString().getBytes(), Base64.DEFAULT);
+
                     DtRegistroHuesped dtAltaHuesped = new DtRegistroHuesped(
                             email.getText().toString(),
                             nombre.getText().toString(),
                             apellido.getText().toString(),
-                            pass.getText().toString()
+                            hash
                     );
                     IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
                     Call<Object> call = iAmqApi.altaHuesped(dtAltaHuesped);
@@ -132,7 +137,7 @@ public class Registro extends Fragment {
                                         public void onClick(DialogInterface dialog, int whichButton) {
                                             Navigation.findNavController(view).navigate(R.id.login_fragment, new Bundle());
                                         }}).show();
-                            Log.i("REGISTRO ", "onResponse: OK ");
+                             Log.i("REGISTRO ", "onResponse: OK ");
                         }
 
                         @Override

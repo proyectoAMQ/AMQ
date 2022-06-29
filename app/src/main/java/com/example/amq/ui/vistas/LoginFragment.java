@@ -168,6 +168,14 @@ public class LoginFragment extends Fragment {
 
                 }
             });
+
+            Button btnRegistro = (Button) getView().findViewById(R.id.login_registro);
+            btnRegistro.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Navigation.findNavController(view).navigate(R.id.registro_fragment, new Bundle());
+                }
+            });
         }
 
 
