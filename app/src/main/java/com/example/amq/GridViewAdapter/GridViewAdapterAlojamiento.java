@@ -1,15 +1,20 @@
 package com.example.amq.GridViewAdapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,6 +24,7 @@ import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtHabitacion;
 import com.example.amq.ui.vistas.ListarAlojamientos;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 

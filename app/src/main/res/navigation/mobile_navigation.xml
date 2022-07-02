@@ -37,6 +37,9 @@
         <argument
             android:name="precio"
             app:argType="string" />
+        <action
+            android:id="@+id/action_listarAlojamientos_to_infoAlojHab"
+            app:destination="@id/infoAlojHab" />
     </fragment>
     <fragment
         android:id="@+id/infoAlojHab"
@@ -44,6 +47,9 @@
         android:label="Información de alojamiento"
         tools:layout="@layout/fragment_info_aloj_hab" >
         <argument android:name="idHabitacion"  app:argType="integer" />
+        <action
+            android:id="@+id/action_infoAlojHab_to_reservar_fragment"
+            app:destination="@id/reservar_fragment" />
     </fragment>
     <fragment
         android:id="@+id/reservar_fragment"
@@ -51,6 +57,9 @@
         android:label="Relizar reserva"
         tools:layout="@layout/fragment_reservar" >
         <argument android:name="idHabitacion"  app:argType="integer" />
+        <action
+            android:id="@+id/action_reservar_fragment_to_pago_activity"
+            app:destination="@id/pago_activity" />
     </fragment>
 
     <fragment
@@ -58,6 +67,9 @@
         android:name="com.example.amq.ui.vistas.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_fragment_to_registro_fragment"
+            app:destination="@id/registro_fragment" />
     </fragment>
     <fragment
         android:id="@+id/registro_fragment"
