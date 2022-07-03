@@ -3,6 +3,9 @@ package com.example.amq.ui.vistas;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +29,12 @@ import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtRegistroHuesped;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.Endpoint;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.InputStream;
 
 import java.util.prefs.Preferences;
 
@@ -48,6 +57,7 @@ public class Registro extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public Registro() {
         // Required empty public constructor
@@ -90,6 +100,15 @@ public class Registro extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        db.collection("fotos").document("logosinfondosombreado").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    new Registro.DownloadImageFromInternet((ImageView) view.findViewById(R.id.imageViewRegistro)).execute(documentSnapshot.getString("url1"));
+                }
+            }
+        });
 
         Button btnRegistro = getView().findViewById(R.id.registro_btn_registro);
         btnRegistro.setOnClickListener(new View.OnClickListener(){
@@ -174,6 +193,27 @@ public class Registro extends Fragment {
             }
         });
 
+    }
 
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage= BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
     }
 }

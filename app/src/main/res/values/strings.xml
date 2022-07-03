@@ -35,7 +35,7 @@
     <string name="Clear">Borrar</string>
     <string name="Register">Registrarse</string>
     <string name="registration">Registro</string>
-    <string name="enter_your_user_name">Ingrese su nombre de usuario</string>
+    <string name="enter_your_user_name">Ingrese su nombre</string>
     <string name="ingrese_su_email">Ingrese su email</string>
     <string name="ingrese_su_apellido">Ingrese su apellido</string>
     <string name="ingrese_su_contrase_a">Ingrese su contraseña</string>
