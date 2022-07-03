@@ -26,6 +26,7 @@ import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceIdReceiver;
 import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -131,8 +132,10 @@ public class LoginFragment extends Fragment {
                     String pass = ((EditText) getView().findViewById(R.id.login_pass)).getText().toString();
 
                     String hash = android.util.Base64.encodeToString(pass.getBytes(), Base64.DEFAULT);
+                    Log.d("pass", hash);
 
                     DtLogin dtLogin = new DtLogin(email, hash, pushToken);
+                    Log.d("login", dtLogin.getEmail() + " " + dtLogin.getPass());
 
                     IAmqApi amqApi = AMQEndpoint.getIAmqApi();
 

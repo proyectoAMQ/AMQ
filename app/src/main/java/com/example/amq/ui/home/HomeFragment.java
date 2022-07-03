@@ -35,6 +35,7 @@ import com.example.amq.models.DtPais;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -148,6 +149,9 @@ public class HomeFragment extends Fragment {
                 navController.navigate(R.id.action_navigation_home_to_listarAlojamientos, bundle);
             }
         });
+
+        BottomNavigationView navBar = view.findViewById(R.id.nav_view);
+        navBar.setVisibility(View.VISIBLE);
     }
 
     @Override
