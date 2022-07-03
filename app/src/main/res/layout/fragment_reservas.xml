@@ -5,7 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.vistas.Reservas">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/reservas_msjError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAlignment="center"
+        android:visibility="gone"
+        />
+
     <GridView
         android:id="@+id/reservas_grdReservas"
         android:layout_width="match_parent"

@@ -1,16 +1,23 @@
 package com.example.amq.paypal;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 
 import com.example.amq.MainActivity;
+import com.example.amq.R;
 import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtUsuario;
 import com.example.amq.rest.AMQEndpoint;
@@ -23,10 +30,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaypalWebView extends WebViewClient {
+    SharedPreferences preferences = null;
 
     @Override
     public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
         super.doUpdateVisitedHistory(view, url, isReload);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+
         //Url cancelado
         if( url.matches("(?i).*DB8MHxwaG90by1wYWd.*") ){
             Intent intent = new Intent(view.getContext(), PagoError.class);
@@ -54,13 +65,35 @@ public class PaypalWebView extends WebViewClient {
                     preferences.getString("id_order", null)
             );
 
+            String jwToken =  preferences.getString("jwToken" , null );
+
             IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
-            Call<Object> call = iAmqApi.altaReserva(dtAltaReserva);
+            Call<Object> call = iAmqApi.altaReserva(jwToken, dtAltaReserva);
             call.enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
-                    Intent intent = new Intent(view.getContext(), PagoOK.class);
-                    view.getContext().startActivity(intent);
+                    if( response.code()==403){
+                        new AlertDialog.Builder(view.getContext())
+                                .setTitle("Sesión: ")
+                                .setMessage("La sesión ha caducado, presione OK para iniciar sesión nuevamente.")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        SharedPreferences preferences = PreferenceManager
+                                                .getDefaultSharedPreferences(view.getContext());
+                                        SharedPreferences.Editor editor = preferences.edit();
+                                        editor.remove("emailUsuario");
+                                        editor.remove("idUsuario");
+                                        editor.remove("jwToken");
+                                        editor.apply();
+                                        Navigation.findNavController(view)
+                                                .navigate(R.id.login_fragment, new Bundle());
+                                    }}).show();
+                    }else{
+                        Intent intent = new Intent(view.getContext(), PagoOK.class);
+                        view.getContext().startActivity(intent);
+                    }
                 }
 
                 @Override

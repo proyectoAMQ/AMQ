@@ -1,5 +1,7 @@
 package com.example.amq.ui.vistas;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -149,45 +151,67 @@ public class InfoAlojHab extends Fragment {
     public DtAlojHab findAlojHab( int id ){
         IAmqApi amqApi = AMQEndpoint.getIAmqApi();
 
-        Call<DtAlojHab> call = amqApi.buscarAlojamientoHab(id);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String jwToken = preferences.getString("jwToken", null);
+
+        Call<DtAlojHab> call = amqApi.buscarAlojamientoHab(jwToken, id);
         call.enqueue( new Callback< DtAlojHab >(){
             @Override
             public void onResponse(Call<DtAlojHab> call, Response<DtAlojHab> response) {
-                dtAlojHab = response.body();
-                //Datos alojamiento
-                ((TextView)getView().findViewById(R.id.info_nomAloj))
-                        .setText(dtAlojHab.getNombre());
-                ((TextView)getView().findViewById(R.id.info_descAloj))
-                        .setText(dtAlojHab.getDescripcion());
-                ((TextView)getView().findViewById(R.id.info_pais))
-                        .setText(dtAlojHab.getDirecion().getPais().getNombre());
-                ((TextView)getView().findViewById(R.id.info_ciudad))
-                        .setText(dtAlojHab.getDirecion().getCiudad());
-                ((TextView)getView().findViewById(R.id.info_direccion))
-                        .setText(
-                                dtAlojHab.getDirecion().getCalle()+ " " +
-                                dtAlojHab.getDirecion().getNumero()
-                        );
-                //Datos habitacion
-                ((TextView)getView().findViewById(R.id.info_descHab))
-                        .setText(dtAlojHab.getHabitacion().getDescripcion());
-                ((TextView)getView().findViewById(R.id.info_precio))
-                        .setText(dtAlojHab.getHabitacion().getPrecioNoche().toString());
-                ((TextView)getView().findViewById(R.id.info_camas))
-                        .setText(String.valueOf(dtAlojHab.getHabitacion().getCamas() ) );
-                //Datos servicios
-                ((TextView)getView().findViewById(R.id.info_aire))
-                        .setText(dtAlojHab.getHabitacion().getDtservicios().isAire() ? "SI" : "NO");
-                ((TextView)getView().findViewById(R.id.info_tvCable))
-                        .setText(dtAlojHab.getHabitacion().getDtservicios().isTvCable() ? "SI" : "NO");
-                ((TextView)getView().findViewById(R.id.info_jacuzzi))
-                        .setText(dtAlojHab.getHabitacion().getDtservicios().isJacuzzi() ? "SI" : "NO");
-                ((TextView)getView().findViewById(R.id.info_wifi))
-                        .setText(dtAlojHab.getHabitacion().getDtservicios().isWifi() ? "SI" : "NO");
-                ((TextView)getView().findViewById(R.id.info_desayuno))
-                        .setText(dtAlojHab.getHabitacion().getDtservicios().isDesayuno() ? "SI" : "NO");
-                ((TextView)getView().findViewById(R.id.info_parking))
-                        .setText(dtAlojHab.getHabitacion().getDtservicios().isParking() ? "SI" : "NO");
+                //No tiene permiso
+                if( response.code()==403){
+                    new AlertDialog.Builder(getContext())
+                        .setTitle("Sesión: ")
+                        .setMessage("La sesión ha caducado, presione OK para iniciar sesión nuevamente.")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.remove("emailUsuario");
+                                editor.remove("idUsuario");
+                                editor.remove("jwToken");
+                                editor.apply();
+                                Navigation.findNavController(getView()).navigate(R.id.login_fragment, new Bundle());
+                            }}).show();
+                }
+                else {
+                    dtAlojHab = response.body();
+                    //Datos alojamiento
+                    ((TextView) getView().findViewById(R.id.info_nomAloj))
+                            .setText(dtAlojHab.getNombre());
+                    ((TextView) getView().findViewById(R.id.info_descAloj))
+                            .setText(dtAlojHab.getDescripcion());
+                    ((TextView) getView().findViewById(R.id.info_pais))
+                            .setText(dtAlojHab.getDirecion().getPais().getNombre());
+                    ((TextView) getView().findViewById(R.id.info_ciudad))
+                            .setText(dtAlojHab.getDirecion().getCiudad());
+                    ((TextView) getView().findViewById(R.id.info_direccion))
+                            .setText(
+                                    dtAlojHab.getDirecion().getCalle() + " " +
+                                            dtAlojHab.getDirecion().getNumero()
+                            );
+                    //Datos habitacion
+                    ((TextView) getView().findViewById(R.id.info_descHab))
+                            .setText(dtAlojHab.getHabitacion().getDescripcion());
+                    ((TextView) getView().findViewById(R.id.info_precio))
+                            .setText(dtAlojHab.getHabitacion().getPrecioNoche().toString());
+                    ((TextView) getView().findViewById(R.id.info_camas))
+                            .setText(String.valueOf(dtAlojHab.getHabitacion().getCamas()));
+                    //Datos servicios
+                    ((TextView) getView().findViewById(R.id.info_aire))
+                            .setText(dtAlojHab.getHabitacion().getDtservicios().isAire() ? "SI" : "NO");
+                    ((TextView) getView().findViewById(R.id.info_tvCable))
+                            .setText(dtAlojHab.getHabitacion().getDtservicios().isTvCable() ? "SI" : "NO");
+                    ((TextView) getView().findViewById(R.id.info_jacuzzi))
+                            .setText(dtAlojHab.getHabitacion().getDtservicios().isJacuzzi() ? "SI" : "NO");
+                    ((TextView) getView().findViewById(R.id.info_wifi))
+                            .setText(dtAlojHab.getHabitacion().getDtservicios().isWifi() ? "SI" : "NO");
+                    ((TextView) getView().findViewById(R.id.info_desayuno))
+                            .setText(dtAlojHab.getHabitacion().getDtservicios().isDesayuno() ? "SI" : "NO");
+                    ((TextView) getView().findViewById(R.id.info_parking))
+                            .setText(dtAlojHab.getHabitacion().getDtservicios().isParking() ? "SI" : "NO");
+                }
             }
 
             @Override

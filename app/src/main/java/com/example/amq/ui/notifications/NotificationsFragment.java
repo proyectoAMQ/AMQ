@@ -37,6 +37,7 @@ public class NotificationsFragment extends Fragment {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove("emailUsuario");
                 editor.remove("idUsuario");
+                editor.remove("jwToken");
                 editor.apply();
 
                 Navigation.findNavController(view).navigate(R.id.login_fragment, new Bundle());

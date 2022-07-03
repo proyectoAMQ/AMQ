@@ -16,6 +16,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -27,17 +28,23 @@ public interface IAmqApi {
     public Call<List<DtPais>> getPaises();
 
     @GET("/alojamiento/buscarAlojamientoHab/{id}")
-    public Call<DtAlojHab> buscarAlojamientoHab(@Path("id") int id );
+    public Call<DtAlojHab> buscarAlojamientoHab(@Header("Authorization") String authHeader,
+                                                @Path("id") int id );
 
     @POST("/usuario/login")
     public Call<DtUsuario> login(@Body DtLogin dtLogin );
     
     @POST("/reserva/alta")
-    public Call<Object> altaReserva(@Body DtAltaReserva dtAltaReserva );
+    public Call<Object> altaReserva(@Header("Authorization") String authHeader,
+                                    @Body DtAltaReserva dtAltaReserva );
 
     @POST("/usuario/altaHuesped")
     public Call<Object> altaHuesped(@Body DtRegistroHuesped dtRegistroHuesped );
 
     @POST("/reserva/reservasXHuespXEstado")
-    public Call<List<DtReservaAlojHab>> listarReservas(@Body DtResHuespEstado dtResHuespEstado );
+    public Call<List<DtReservaAlojHab>> listarReservas(@Header("Authorization") String authHeader,
+                                                       @Body DtResHuespEstado dtResHuespEstado );
+
+    @GET("/usuario/esValidoTokenHuesped")
+    public Call<Object> esValidoTokenHuesped(@Header("Authorization") String authHeader);
 }

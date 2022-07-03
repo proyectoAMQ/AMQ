@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.amq.R;
-import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtUsuario;
 import com.example.amq.rest.AMQEndpoint;
@@ -44,7 +43,9 @@ import retrofit2.Response;
  */
 public class LoginFragment extends Fragment {
 
+    SharedPreferences preferences;
     private String pushToken;
+    IAmqApi amqApi = null;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,6 +85,8 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        amqApi = AMQEndpoint.getIAmqApi();
+
 
         //Get firebase push token
         FirebaseMessaging.getInstance().getToken()
@@ -113,71 +116,99 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
         int idUsr = preferences.getInt("idUsuario", 0 );
 
 
-        if(idUsr!=0){
-            Navigation.findNavController(view).navigate(R.id.navigation_home, new Bundle() );
-        }
-        else {
-            Button btnLoguear = (Button) getView().findViewById(R.id.login_loguear);
+        //Verifica si el token guardado es válido, si no lo es elimina las variables de sesión
+        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String jwToken = preferences.getString("jwToken", "aaa" );
+        IAmqApi amqApi = AMQEndpoint.getIAmqApi();
+        Call<Object> call = amqApi.esValidoTokenHuesped(jwToken);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if(response.code()!=403){
+                    Navigation.findNavController(view).navigate(R.id.navigation_home, new Bundle());
+                }
+                else{
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.commit();
 
-            btnLoguear.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    EditText viewEmail = (EditText) getView().findViewById(R.id.login_email);
-                    String email = viewEmail.getText().toString();
-                    String pass = ((EditText) getView().findViewById(R.id.login_pass)).getText().toString();
+                    Button btnLoguear = (Button) getView().findViewById(R.id.login_loguear);
 
-                    String hash = android.util.Base64.encodeToString(pass.getBytes(), Base64.DEFAULT);
-
-                    DtLogin dtLogin = new DtLogin(email, hash, pushToken);
-
-                    IAmqApi amqApi = AMQEndpoint.getIAmqApi();
-
-                    Call<DtUsuario> call = amqApi.login(dtLogin);
-                    call.enqueue(new Callback<DtUsuario>() {
+                    btnLoguear.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onResponse(Call<DtUsuario> call, Response<DtUsuario> response) {
-                            DtUsuario usr = response.body();
-
-                            if (response.headers().get("amq_error") != null && !response.headers().get("amq_error").isEmpty()) {
-                                String msjError = "";
-                                msjError = response.headers().get("amq_error");
-
-                                Toast.makeText(getActivity(), msjError, Toast.LENGTH_SHORT).show();
-                            } else {
-                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString("emailUsuario", usr.getEmail());
-                                editor.putInt("idUsuario", usr.getId());
-                                editor.apply();
-
-                                Navigation.findNavController(view).navigate(R.id.navigation_home, new Bundle());
-
-                                Log.i("Usuario logueado", usr.getEmail());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<DtUsuario> call, Throwable t) {
-                            Log.i("Usuario", t.getMessage());
+                        public void onClick(View view) {
+                            clickLoguear(view);
                         }
                     });
 
+                    Button btnRegistro = (Button) getView().findViewById(R.id.login_registro);
+                    btnRegistro.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Navigation.findNavController(view).navigate(R.id.registro_fragment, new Bundle());
+                        }
+                    });
                 }
-            });
+            }
 
-            Button btnRegistro = (Button) getView().findViewById(R.id.login_registro);
-            btnRegistro.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Navigation.findNavController(view).navigate(R.id.registro_fragment, new Bundle());
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void clickLoguear(View view){
+        EditText viewEmail = (EditText) getView().findViewById(R.id.login_email);
+        String email = viewEmail.getText().toString();
+        String pass = ((EditText) getView().findViewById(R.id.login_pass)).getText().toString();
+
+        String hash = android.util.Base64.encodeToString(pass.getBytes(), Base64.DEFAULT);
+
+        DtLogin dtLogin = new DtLogin(email, hash, pushToken);
+
+        Call<DtUsuario> call = amqApi.login(dtLogin);
+        call.enqueue(new Callback<DtUsuario>() {
+            @Override
+            public void onResponse(Call<DtUsuario> call, Response<DtUsuario> response) {
+                DtUsuario usr = response.body();
+
+                if (response.headers().get("amq_error") != null && !response.headers().get("amq_error").isEmpty()) {
+                    String msjError = "";
+                    msjError = response.headers().get("amq_error");
+
+                    Toast.makeText(getActivity(), msjError, Toast.LENGTH_SHORT).show();
+                } else if( usr==null ){
+                    Toast.makeText(getActivity(), "El usaurio y/o contraseña ingresados son incorrectos"
+                            , Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+                else if(!usr.getTipo().equals("Hu")){
+                    Toast.makeText(getActivity(), "El usuario ingresado no es huésped."
+                            , Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("emailUsuario", usr.getEmail());
+                    editor.putInt("idUsuario", usr.getId());
+                    editor.putString("jwToken", usr.getJwToken());
+                    editor.apply();
 
+                    Navigation.findNavController(view).navigate(R.id.navigation_home, new Bundle());
 
+                    Log.i("Usuario logueado", usr.getEmail());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DtUsuario> call, Throwable t) {
+                Log.i("Usuario", t.getMessage());
+            }
+        });
     }
 }

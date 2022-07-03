@@ -1,11 +1,14 @@
 package com.example.amq.ui.vistas;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
@@ -40,7 +44,10 @@ import retrofit2.Response;
  */
 public class Reservas extends Fragment {
     GridView grdReservas;
+    TextView msjError;
     List<DtReservaAlojHab> reservas=null;
+    SharedPreferences preferences = null;
+    View viewFrag;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,19 +87,6 @@ public class Reservas extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        Integer idUsuario = preferences.getInt("idUsuario" , '0');
-
-        if(! idUsuario.equals(0)) {
-            List<ReservaEstado> estados = new ArrayList<>();
-            estados.add(ReservaEstado.PENDIENTE);
-            DtResHuespEstado dtResHuespEstado = new DtResHuespEstado(idUsuario , estados);
-            listarReservas(dtResHuespEstado);
-            Log.i("RESERVAS ", reservas != null ? reservas.toString() : "null");
-        }
     }
 
     @Override
@@ -106,23 +100,64 @@ public class Reservas extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        this.viewFrag = view;
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Integer idUsuario = preferences.getInt("idUsuario" , '0');
+
+        if(! idUsuario.equals(0)) {
+            List<ReservaEstado> estados = new ArrayList<>();
+            estados.add(ReservaEstado.PENDIENTE);
+            DtResHuespEstado dtResHuespEstado = new DtResHuespEstado(idUsuario , estados);
+            listarReservas(dtResHuespEstado);
+            Log.i("RESERVAS ", reservas != null ? reservas.toString() : "null");
+        }
 
     }
 
     private void listarReservas(DtResHuespEstado dtResHuespEstado){
-        IAmqApi amqApi = AMQEndpoint.getIAmqApi();
+        msjError = viewFrag.findViewById(R.id.reservas_msjError);
+        grdReservas = viewFrag.findViewById(R.id.reservas_grdReservas);
 
-        Call<List< DtReservaAlojHab> > call = amqApi.listarReservas(dtResHuespEstado);
+        IAmqApi amqApi = AMQEndpoint.getIAmqApi();
+        String jwToken =  preferences.getString("jwToken" , null );
+
+        if (jwToken == null) {
+            msjError.setVisibility(View.VISIBLE);
+            msjError.setText("Su sesión caducó, por favor inicie sesión nuevamente.");
+            grdReservas.setVisibility(View.GONE);
+        }
+
+        Call<List< DtReservaAlojHab> > call = amqApi.listarReservas( jwToken, dtResHuespEstado);
 
         call.enqueue(new Callback<List<DtReservaAlojHab>>() {
             @Override
             public void onResponse(Call<List<DtReservaAlojHab>> call, Response<List<DtReservaAlojHab>> response) {
+                if( response.code()==403){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Sesión: ")
+                            .setMessage("La sesión ha caducado, presione OK para iniciar sesión nuevamente.")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    SharedPreferences preferences = PreferenceManager
+                                            .getDefaultSharedPreferences(getContext());
+                                    SharedPreferences.Editor editor = preferences.edit();
+                                    editor.remove("emailUsuario");
+                                    editor.remove("idUsuario");
+                                    editor.remove("jwToken");
+                                    editor.apply();
+                                    Navigation.findNavController(getView())
+                                            .navigate(R.id.login_fragment, new Bundle());
+                                }}).show();
+                }
                 reservas = response.body();
                 if(reservas==null){
                     Log.i("Reservas", "No tiene Reservas");
                 }
                 else{
-                    grdReservas = (GridView) getView().findViewById(R.id.reservas_grdReservas);
+
 
                     GridViewAdapterReserva customAdapter = new GridViewAdapterReserva(
                             reservas, getActivity() );

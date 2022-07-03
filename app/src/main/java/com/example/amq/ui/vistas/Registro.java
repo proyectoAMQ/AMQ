@@ -2,6 +2,7 @@ package com.example.amq.ui.vistas;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,8 @@ import com.example.amq.models.DtRegistroHuesped;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 import com.google.api.Endpoint;
+
+import java.util.prefs.Preferences;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -128,8 +132,26 @@ public class Registro extends Fragment {
                     call.enqueue(new Callback<Object>() {
                         @Override
                         public void onResponse(Call<Object> call, Response<Object> response) {
+                            if( response.code()==403){
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Sesión: ")
+                                        .setMessage("La sesión ha caducado, presione OK para iniciar sesión nuevamente.")
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                SharedPreferences preferences = PreferenceManager
+                                                        .getDefaultSharedPreferences(getContext());
+                                                SharedPreferences.Editor editor = preferences.edit();
+                                                editor.remove("emailUsuario");
+                                                editor.remove("idUsuario");
+                                                editor.remove("jwToken");
+                                                editor.apply();
+                                                Navigation.findNavController(getView()).navigate(R.id.login_fragment, new Bundle());
+                                            }}).show();
+                            }
                             new AlertDialog.Builder(getContext())
-                                    .setTitle("Title")
+                                    .setTitle("Registro")
                                     .setMessage("El registro fué exitoso, presione OK para ir al inicio de sesión.")
                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
