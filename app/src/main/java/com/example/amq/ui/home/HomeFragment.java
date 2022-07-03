@@ -1,5 +1,8 @@
 package com.example.amq.ui.home;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,6 +23,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
 import com.example.amq.R;
 import com.example.amq.databinding.FragmentHomeBinding;
@@ -28,9 +35,11 @@ import com.example.amq.models.DtPais;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +53,8 @@ public class HomeFragment extends Fragment {
     private String rangoR;
     private List<String> paises = new ArrayList<String>();
     private List<DtPais> paisesDT = new ArrayList<DtPais>();
+    ImageSlider slider;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private FragmentHomeBinding binding;
 
@@ -61,6 +72,30 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
+
+        slider = view.findViewById(R.id.image_sliderInicio);
+        final List<SlideModel> imagenesFire = new ArrayList<>();
+        db.collection("fotos").document("Fotos Inicio").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url1"), ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url2"), ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url3"), ScaleTypes.FIT));
+                    slider.setImageList(imagenesFire, ScaleTypes.FIT);
+                    slider.startSliding(3000);
+                }
+            }
+        });
+
+        db.collection("fotos").document("logosinfondosombreado").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    new DownloadImageFromInternet((ImageView) view.findViewById(R.id.imageViewInicio)).execute(documentSnapshot.getString("url1"));
+                }
+            }
+        });
 
         Spinner pais = view.findViewById(R.id.dropPais);
         ArrayAdapter<String> adapterP = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, paises);
@@ -114,6 +149,9 @@ public class HomeFragment extends Fragment {
                 navController.navigate(R.id.action_navigation_home_to_listarAlojamientos, bundle);
             }
         });
+
+        BottomNavigationView navBar = view.findViewById(R.id.nav_view);
+        navBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -169,5 +207,27 @@ public class HomeFragment extends Fragment {
             }
         }
         return 0;
+    }
+
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage= BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
     }
 }

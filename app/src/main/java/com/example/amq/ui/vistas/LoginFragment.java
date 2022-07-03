@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.amq.R;
+import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtUsuario;
 import com.example.amq.rest.AMQEndpoint;
