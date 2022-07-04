@@ -1,9 +1,10 @@
 package com.example.amq.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DtReservaAlojHab {
+public class DtReservaAlojHab implements Serializable {
 	private int res_id;
 	private ReservaEstado res_estado;
 	private Date res_fechaInicio;

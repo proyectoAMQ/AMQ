@@ -7,14 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.navigation.Navigation;
 
 import com.example.amq.R;
-import com.example.amq.models.DtHabitacion;
 import com.example.amq.models.DtReservaAlojHab;
 
 import java.text.DateFormat;
@@ -55,18 +52,25 @@ public class GridViewAdapterReserva extends BaseAdapter {
         view = LayoutInflater.from(context).
                     inflate(R.layout.grid_view_item_reserva, viewGroup, false);
 
-        TextView nombreAloj = (TextView) view.findViewById(R.id.item_reserva_nombreAloj);
-        nombreAloj.setText( dtReservas.get(i).getAloj_nombre() );
-        nombreAloj.setOnClickListener(new View.OnClickListener(){
+
+
+        LinearLayout layoutRes = view.findViewById(R.id.reservas_click_layout);
+        layoutRes.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
                 TextView tvId = (TextView) ((LinearLayout)view.getParent()).findViewById(R.id.item_reserva_id);
-                Toast.makeText(view.getContext(), "soy una tostada con id: "+ tvId.getText()
-
-                        , Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable( "reserva", dtReservas.get(i));
+                bundle.putInt("idReserva", Integer.parseInt(  tvId.getText().toString() )) ;
+                bundle.putInt("idReserva", Integer.parseInt(  tvId.getText().toString() )) ;
+                Navigation.findNavController(view).navigate(R.id.reservas_fragment_info, bundle);
             }
         });
+
+        TextView nombreAloj = (TextView) view.findViewById(R.id.item_reserva_nombreAloj);
+        nombreAloj.setText( dtReservas.get(i).getAloj_nombre() + " " +
+                 String.valueOf( dtReservas.get(i).getRes_calificacion()== null ? 0 : dtReservas.get(i).getRes_calificacion().getId()  ) );
 
         Locale locale = new Locale("es", "AR");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);

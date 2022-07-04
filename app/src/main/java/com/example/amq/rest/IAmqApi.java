@@ -5,7 +5,7 @@ import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtLogin;
-import com.example.amq.models.DtPais;
+import com.example.amq.models.DtIdValor;
 import com.example.amq.models.DtRegistroHuesped;
 import com.example.amq.models.DtResHuespEstado;
 import com.example.amq.models.DtReservaAlojHab;
@@ -25,7 +25,7 @@ public interface IAmqApi {
     public Call<List<DtAlojamiento>> listarAlojamientos(@Body DtFiltrosAloj dtFiltros);
 
     @GET("alojamiento/getPaises")
-    public Call<List<DtPais>> getPaises();
+    public Call<List<DtIdValor>> getPaises();
 
     @GET("/alojamiento/buscarAlojamientoHab/{id}")
     public Call<DtAlojHab> buscarAlojamientoHab(@Header("Authorization") String authHeader,

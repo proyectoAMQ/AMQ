@@ -83,6 +83,12 @@
         android:label="Mis reservas"
         tools:layout="@layout/fragment_reservas" >
     </fragment>
+    <fragment
+        android:id="@+id/reservas_fragment_info"
+        android:name="com.example.amq.ui.vistas.ReservaInfo"
+        android:label="Mis reservas"
+        tools:layout="@layout/fragment_reserva_info" >
+    </fragment>
 
     <activity
         android:id="@+id/pago_activity"

@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +24,9 @@ import androidx.navigation.Navigation;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
-import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
 import com.example.amq.R;
 import com.example.amq.databinding.FragmentHomeBinding;
-import com.example.amq.models.DtAlojamiento;
-import com.example.amq.models.DtFiltrosAloj;
-import com.example.amq.models.DtPais;
+import com.example.amq.models.DtIdValor;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,7 +47,7 @@ public class HomeFragment extends Fragment {
     private int paisR;
     private String rangoR;
     private List<String> paises = new ArrayList<String>();
-    private List<DtPais> paisesDT = new ArrayList<DtPais>();
+    private List<DtIdValor> paisesDT = new ArrayList<DtIdValor>();
     ImageSlider slider;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -104,8 +99,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.v("pais", (String) parent.getItemAtPosition(position));
-                for (DtPais p : paisesDT) {
-                    if (p.getNombre().equals((String) parent.getItemAtPosition(position))) {
+                for (DtIdValor p : paisesDT) {
+                    if (p.getValor().equals((String) parent.getItemAtPosition(position))) {
                         paisR = p.getId();
                     }
                 }
@@ -150,7 +145,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        BottomNavigationView navBar = view.findViewById(R.id.nav_view);
+        BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.VISIBLE);
     }
 
@@ -163,13 +158,13 @@ public class HomeFragment extends Fragment {
     private void listarPaises( View view ){
         IAmqApi amqApi = AMQEndpoint.getIAmqApi();
 
-        Call<List<DtPais>> call = amqApi.getPaises();
-        call.enqueue( new Callback<List<DtPais>>(){
+        Call<List<DtIdValor>> call = amqApi.getPaises();
+        call.enqueue( new Callback<List<DtIdValor>>(){
             @Override
-            public void onResponse(Call<List<DtPais>> call, Response<List<DtPais>> response) {
+            public void onResponse(Call<List<DtIdValor>> call, Response<List<DtIdValor>> response) {
                paisesDT = response.body();
-               for (DtPais p : paisesDT){
-                   paises.add(p.getNombre());
+               for (DtIdValor p : paisesDT){
+                   paises.add(p.getValor());
                }
                 Spinner paisesView = view.findViewById(R.id.dropPais);
 
@@ -194,15 +189,15 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<DtPais>> call, Throwable t) {
+            public void onFailure(Call<List<DtIdValor>> call, Throwable t) {
                 Log.d("Fail", "Fallo");
             }
         });
     }
 
     private int getIdPais(String nombrePais){
-        for(DtPais p : paisesDT){
-            if( p.getNombre()!=null &&  p.getNombre().equals(nombrePais)){
+        for(DtIdValor p : paisesDT){
+            if( p.getValor()!=null &&  p.getValor().equals(nombrePais)){
                 return p.getId();
             }
         }
