@@ -53,6 +53,8 @@ public class NotificationsFragment extends Fragment {
                 editor.remove("idUsuario");
                 editor.remove("jwToken");
                 editor.apply();
+                BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view);
+                navBar.setVisibility(View.GONE);
 
                 Navigation.findNavController(view).navigate(R.id.login_fragment, new Bundle());
             }
