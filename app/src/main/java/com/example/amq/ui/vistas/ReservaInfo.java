@@ -16,13 +16,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.amq.R;
 import com.example.amq.models.DtEnviarCalificacion;
 import com.example.amq.models.DtReservaAlojHab;
 import com.example.amq.models.ReservaEstado;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import retrofit2.Call;
@@ -42,6 +50,8 @@ public class ReservaInfo extends Fragment {
     private boolean isEditable_calificar=false;
     private View reservaInfoView;
     Button btnCalificar;
+    ImageSlider slider;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     TextView calAnfitrion;
     TextView resena;
@@ -84,6 +94,20 @@ public class ReservaInfo extends Fragment {
         reservaInfoView = view;
         btnCalificar = view.findViewById(R.id.reserva_btncalificar);
 
+        slider = view.findViewById(R.id.image_sliderReserva);
+        final List<SlideModel> imagenesFire = new ArrayList<>();
+        db.collection("fotos").document(reserva.getAloj_nombre()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url1"), ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url2"), ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url3"), ScaleTypes.FIT));
+                    slider.setImageList(imagenesFire, ScaleTypes.FIT);
+                }
+            }
+        });
+
         TextView nomAloj = view.findViewById(R.id.reserva_aloj_nombre);
         TextView descAloj = view.findViewById(R.id.reserva_aloj_desc);
         TextView ciudadAlojPais = view.findViewById(R.id.reserva_aloj_ciudad_pais);
@@ -102,6 +126,7 @@ public class ReservaInfo extends Fragment {
                 reserva.getAloj_direccion().getNumero()+"" );
         idRes.setText( String.valueOf(reserva.getRes_id() ) );
         estado.setText( reserva.getRes_estado().toString() );
+        estado.setText(reserva.getRes_estado().toString());
 
         if( reserva.getRes_estado() == ReservaEstado.EJECUTADA ) {
             LinearLayout califLayout =  view.findViewById(R.id.reserva_layout_calif);

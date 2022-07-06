@@ -1,67 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".ui.vistas.ReservaInfo">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nombre Alojamiento:" />
-        <TextView
-            android:id="@+id/reserva_aloj_nombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:text="RESERVA"
+        android:textAlignment="center"
+        android:textSize="36dp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Descripción alojamiento:" />
-        <TextView
-            android:id="@+id/reserva_aloj_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    <com.denzcoskun.imageslider.ImageSlider
+        android:id="@+id/image_sliderReserva"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:gravity="top">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ciudad:" />
-        <TextView
-            android:id="@+id/reserva_aloj_ciudad_pais"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    </com.denzcoskun.imageslider.ImageSlider>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Direccion:" />
-        <TextView
-            android:id="@+id/reserva_aloj_direccion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nro. de reserva:" />
-        <TextView
-            android:id="@+id/reserva_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Estado reserva:" />
-        <TextView
-            android:id="@+id/reserva_estado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre Alojamiento:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Descripción alojamiento:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Ciudad:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Direccion:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Nro. de reserva:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Estado:"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/reserva_aloj_nombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/reserva_aloj_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/reserva_aloj_ciudad_pais"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/reserva_aloj_direccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/reserva_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/reserva_estado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,46 +143,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Calificación anfitrión:" />
-            <EditText
-                android:inputType="number"
-                android:enabled="false"
-                android:id="@+id/reserva_calif_anf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Calificación anfitrión:" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Reseña alojamiento:" />
-            <EditText
-                android:enabled="false"
-                android:id="@+id/reserva_aloj_res"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/reserva_calif_anf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:inputType="number" />
 
-            <Button
-                android:id="@+id/reserva_btncalificar"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reseña alojamiento:" />
+
+                    <EditText
+                        android:id="@+id/reserva_aloj_res"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false" />
+
+                    <Button
+                        android:id="@+id/reserva_btncalificar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Calificar" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Calificar"/>
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:id="@+id/reserva_layout_cancelar">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelar reserva"
+                    android:id="@+id/reserva_btnCancelar"/>
+
+            </LinearLayout>
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:id="@+id/reserva_layout_cancelar">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cancelar reserva"
-            android:id="@+id/reserva_btnCancelar"/>
+    </ScrollView>
 
-    </LinearLayout>
 
-    </LinearLayout>
-</FrameLayout>
+</LinearLayout>

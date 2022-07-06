@@ -115,14 +115,13 @@ public class InfoAlojHab extends Fragment {
 
         slider = view.findViewById(R.id.image_slider);
         final List<SlideModel> imagenesFire = new ArrayList<>();
-        Log.d("Aloj: ", nomAloj);
         db.collection("fotos").document(nomAloj).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
-                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url1"), "Foto 1", ScaleTypes.FIT));
-                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url2"), "Foto 2", ScaleTypes.FIT));
-                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url3"), "Foto 3", ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url1"), ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url2"), ScaleTypes.FIT));
+                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url3"), ScaleTypes.FIT));
                     slider.setImageList(imagenesFire, ScaleTypes.FIT);
                 }
             }
