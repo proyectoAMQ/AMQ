@@ -56,20 +56,25 @@ public class GridViewAdapterReserva extends BaseAdapter {
         view = LayoutInflater.from(context).
                     inflate(R.layout.grid_view_item_reserva, viewGroup, false);
 
+        TextView nombreAloj = (TextView) view.findViewById(R.id.item_reserva_nombreAloj);
+        nombreAloj.setText( dtReservas.get(i).getAloj_nombre() + " " +
+                String.valueOf( dtReservas.get(i).getRes_calificacion()== null ? 0 : dtReservas.get(i).getRes_calificacion().getId()  ) );
 
+        TextView estadoAloj = (TextView) view.findViewById(R.id.item_reserva_estado);
+        estadoAloj.setText( dtReservas.get(i).getRes_estado().toString());
 
-        LinearLayout layoutRes = view.findViewById(R.id.reservas_click_layout);
+        CardView layoutRes = view.findViewById(R.id.reservas_click_layout);
         if( dtReservas.get(i).getRes_estado()== ReservaEstado.PENDIENTE ){
-            layoutRes.setBackgroundColor(Color.rgb(200,220,255));
+            estadoAloj.setTextColor(Color.rgb(200,220,255));
         }
         if( dtReservas.get(i).getRes_estado()== ReservaEstado.EJECUTADA ){
-            layoutRes.setBackgroundColor(Color.rgb(220,200,255));
+            estadoAloj.setTextColor(Color.rgb(220,200,255));
         }
         if( dtReservas.get(i).getRes_estado()== ReservaEstado.RECHAZADO ){
-            layoutRes.setBackgroundColor(Color.rgb(200,255, 220));
+            estadoAloj.setTextColor(Color.rgb(200,255, 220));
         }
         if( dtReservas.get(i).getRes_estado()== ReservaEstado.APROBADO ){
-            layoutRes.setBackgroundColor(Color.rgb(255,220, 200));
+            estadoAloj.setTextColor(Color.rgb(255,220, 200));
         }
 
         layoutRes.setOnClickListener(new View.OnClickListener(){
@@ -83,10 +88,6 @@ public class GridViewAdapterReserva extends BaseAdapter {
                 Navigation.findNavController(view).navigate(R.id.reservas_fragment_info, bundle);
             }
         });
-
-        TextView nombreAloj = (TextView) view.findViewById(R.id.item_reserva_nombreAloj);
-        nombreAloj.setText( dtReservas.get(i).getAloj_nombre() + " " +
-                 String.valueOf( dtReservas.get(i).getRes_calificacion()== null ? 0 : dtReservas.get(i).getRes_calificacion().getId()  ) );
 
         Locale locale = new Locale("es", "AR");
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
