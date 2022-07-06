@@ -1,8 +1,9 @@
 package com.example.amq.models;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class DtFactura {
+public class DtFactura implements Serializable {
 	
 	private int idFactura;
 	private PagoEstado pagoEstado;

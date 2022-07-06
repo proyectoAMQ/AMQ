@@ -1,6 +1,8 @@
 package com.example.amq.models;
 
-public class DtPais {
+import java.io.Serializable;
+
+public class DtPais implements Serializable {
 	private int id;
 	private String nombre;
 	

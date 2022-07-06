@@ -43,6 +43,12 @@ public class ReservaInfo extends Fragment {
     private View reservaInfoView;
     Button btnCalificar;
 
+    TextView calAnfitrion;
+    TextView resena;
+    TextView estado;
+
+
+
     public ReservaInfo() {
         // Required empty public constructor
     }
@@ -84,8 +90,9 @@ public class ReservaInfo extends Fragment {
         TextView direcAloj = view.findViewById(R.id.reserva_aloj_direccion);
         TextView idRes = view.findViewById(R.id.reserva_id);
         TextView calHuesped = view.findViewById(R.id.reserva_calif_hu);
-        TextView calAnfitrion = view.findViewById(R.id.reserva_calif_anf);
-        TextView resena = view.findViewById(R.id.reserva_aloj_res);
+        calAnfitrion = view.findViewById(R.id.reserva_calif_anf);
+        resena = view.findViewById(R.id.reserva_aloj_res);
+        estado = view.findViewById(R.id.reserva_estado);
 
         nomAloj.setText( reserva.getAloj_nombre() );
         descAloj.setText( reserva.getAloj_descripcion() );
@@ -94,6 +101,7 @@ public class ReservaInfo extends Fragment {
         direcAloj.setText( reserva.getAloj_direccion().getCalle()+" " +
                 reserva.getAloj_direccion().getNumero()+"" );
         idRes.setText( String.valueOf(reserva.getRes_id() ) );
+        estado.setText( reserva.getRes_estado().toString() );
 
         if( reserva.getRes_estado() == ReservaEstado.EJECUTADA ) {
             LinearLayout califLayout =  view.findViewById(R.id.reserva_layout_calif);
@@ -113,6 +121,10 @@ public class ReservaInfo extends Fragment {
                 resena.setText("-");
             }
             setBtnCalificar(view);
+        }
+        else if( reserva.getRes_estado()== ReservaEstado.APROBADO ){
+            view.findViewById(R.id.reserva_layout_cancelar).setVisibility(View.VISIBLE);
+            setBtnCancelarAprobada( view );
         }
     }
 
@@ -203,4 +215,44 @@ public class ReservaInfo extends Fragment {
         });
 
     }
+
+    private void setBtnCancelarAprobada(View view){
+        Button btnCancelar = view. findViewById(R.id.reserva_btnCancelar);
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String token = preferences.getString("jwToken","aa");
+                IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
+                Call<Object> call = iAmqApi.cancelarReservaAprobada(token , reserva.getRes_id());
+                btnCancelar.setEnabled(false);
+                call.enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, Response<Object> response) {
+                        if( response.code()==200 ) {
+                            Object o = response.body();
+                            estado.setText("RECHAZADA");
+                            btnCancelar.setVisibility(View.GONE);
+                            reservaInfoView.findViewById(R.id.reserva_layout_cancelar).setEnabled(false);
+                            Toast.makeText(getContext(), "Reserva cancelada.", Toast.LENGTH_LONG).show();
+                        }
+                        else if( response.code()==403){
+                            btnCancelar.setEnabled(true);
+                            Toast.makeText(getContext(), "Su sesión caducó", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            btnCancelar.setEnabled(true);
+                            Toast.makeText(getContext(), "Error: "+response.headers().get("AMQ_ERROR"), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        Toast.makeText(getContext(), "Error en el servidor.", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+        });
+    }
+
 }

@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DtCalificacion{
+public class DtCalificacion implements Serializable{
 
 	private int id;
 	private int calificacionAnfitrion;

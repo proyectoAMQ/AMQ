@@ -52,4 +52,8 @@ public interface IAmqApi {
     @POST("/reserva/calificar")
     public Call<Object> calificar(@Header("Authorization") String authHeader,
                                   @Body DtEnviarCalificacion dtEnviarCalificacion);
+
+    @GET("/reserva/cancelarReservaAprobada/{idreserva}")
+    public Call<Object> cancelarReservaAprobada(@Header("Authorization") String authHeader,
+                                 @Path("idreserva") int idreserva );
 }

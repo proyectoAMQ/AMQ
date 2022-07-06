@@ -1,6 +1,8 @@
 package com.example.amq.models;
 
-public class DtFecha {
+import java.io.Serializable;
+
+public class DtFecha implements Serializable {
 	private int dia;
 	private int mes;
 	private int anio;

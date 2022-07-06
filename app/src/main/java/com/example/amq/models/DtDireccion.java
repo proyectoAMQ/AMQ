@@ -1,8 +1,9 @@
 package com.example.amq.models;
 
 
+import java.io.Serializable;
 
-public class DtDireccion {
+public class DtDireccion implements Serializable {
 	private int id;
 	private String calle;
 	private String numero;
