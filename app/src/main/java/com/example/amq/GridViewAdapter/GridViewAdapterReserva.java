@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.navigation.Navigation;
 
 import com.example.amq.R;
@@ -73,8 +75,7 @@ public class GridViewAdapterReserva extends BaseAdapter {
         layoutRes.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
-                TextView tvId = (TextView) ((LinearLayout)view.getParent()).findViewById(R.id.item_reserva_id);
+                TextView tvId = (TextView) ((GridView)view.getParent()).findViewById(R.id.item_reserva_id);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable( "reserva", dtReservas.get(i));
                 bundle.putInt("idReserva", Integer.parseInt(  tvId.getText().toString() )) ;

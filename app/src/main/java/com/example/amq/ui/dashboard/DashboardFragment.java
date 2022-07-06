@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.amq.R;
 import com.example.amq.databinding.FragmentDashboardBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardFragment extends Fragment {
 
@@ -25,6 +28,13 @@ public class DashboardFragment extends Fragment {
         View root = binding.getRoot();
 
         return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.VISIBLE);
     }
 
     @Override
