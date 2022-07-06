@@ -1,17 +1,15 @@
 package com.example.amq.models;
 
-
-
 public class DtPais {
 	private int id;
-	private String valor;
+	private String nombre;
 	
 	public DtPais() {}
 	
-	public DtPais(int id, String valor) {
+	public DtPais(int id, String nombre) {
 		super();
 		this.id = id;
-		this.valor = valor;
+		this.nombre = nombre;
 	}
 	
 	public int getId() {
@@ -20,14 +18,12 @@ public class DtPais {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getValor() {
-		return valor;
-	}
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
 	public String getNombre() {
-		return valor;
+		return nombre;
 	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
 	
 }

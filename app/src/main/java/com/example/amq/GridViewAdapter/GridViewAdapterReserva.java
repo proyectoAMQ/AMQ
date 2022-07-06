@@ -1,6 +1,7 @@
 package com.example.amq.GridViewAdapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.navigation.Navigation;
 
 import com.example.amq.R;
 import com.example.amq.models.DtReservaAlojHab;
+import com.example.amq.models.ReservaEstado;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -55,6 +57,19 @@ public class GridViewAdapterReserva extends BaseAdapter {
 
 
         LinearLayout layoutRes = view.findViewById(R.id.reservas_click_layout);
+        if( dtReservas.get(i).getRes_estado()== ReservaEstado.PENDIENTE ){
+            layoutRes.setBackgroundColor(Color.rgb(200,220,255));
+        }
+        if( dtReservas.get(i).getRes_estado()== ReservaEstado.EJECUTADA ){
+            layoutRes.setBackgroundColor(Color.rgb(220,200,255));
+        }
+        if( dtReservas.get(i).getRes_estado()== ReservaEstado.RECHAZADO ){
+            layoutRes.setBackgroundColor(Color.rgb(200,255, 220));
+        }
+        if( dtReservas.get(i).getRes_estado()== ReservaEstado.APROBADO ){
+            layoutRes.setBackgroundColor(Color.rgb(255,220, 200));
+        }
+
         layoutRes.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

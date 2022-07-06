@@ -107,8 +107,7 @@ public class Reservas extends Fragment {
 
         if(! idUsuario.equals(0)) {
             List<ReservaEstado> estados = new ArrayList<>();
-            estados.add(ReservaEstado.PENDIENTE);
-            DtResHuespEstado dtResHuespEstado = new DtResHuespEstado(idUsuario , estados);
+            DtResHuespEstado dtResHuespEstado = new DtResHuespEstado(idUsuario , null );
             listarReservas(dtResHuespEstado);
             Log.i("RESERVAS ", reservas != null ? reservas.toString() : "null");
         }

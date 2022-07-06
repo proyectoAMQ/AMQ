@@ -3,6 +3,7 @@ package com.example.amq.rest;
 import com.example.amq.models.DtAlojHab;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtAltaReserva;
+import com.example.amq.models.DtEnviarCalificacion;
 import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtIdValor;
@@ -47,4 +48,8 @@ public interface IAmqApi {
 
     @GET("/usuario/esValidoTokenHuesped")
     public Call<Object> esValidoTokenHuesped(@Header("Authorization") String authHeader);
+
+    @POST("/reserva/calificar")
+    public Call<Object> calificar(@Header("Authorization") String authHeader,
+                                  @Body DtEnviarCalificacion dtEnviarCalificacion);
 }

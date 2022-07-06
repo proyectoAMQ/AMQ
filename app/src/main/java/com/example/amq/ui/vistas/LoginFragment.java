@@ -40,6 +40,7 @@ import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -179,7 +180,10 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-
+                if(t instanceof ConnectException ){
+                    Log.e("Connection:", t.getMessage());
+                }
+                Log.e("ERROR" , t.getMessage());
             }
         });
     }
