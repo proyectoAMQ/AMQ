@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.vistas.ListarAlojamientos" >
+    tools:context=".ui.vistas.ListarAlojamientos"
+    android:background="@drawable/gradient_drawable">
 
     <TextView
         android:id="@+id/ListarAlojamientosMensaje"
