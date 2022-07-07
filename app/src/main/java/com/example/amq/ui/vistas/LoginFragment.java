@@ -193,7 +193,7 @@ public class LoginFragment extends Fragment {
         String email = viewEmail.getText().toString();
         String pass = ((EditText) getView().findViewById(R.id.login_pass)).getText().toString();
 
-        String hash = android.util.Base64.encodeToString(pass.getBytes(), Base64.DEFAULT);
+        String hash = android.util.Base64.encodeToString(pass.getBytes(), Base64.NO_WRAP);
 
         DtLogin dtLogin = new DtLogin(email, hash, pushToken);
 

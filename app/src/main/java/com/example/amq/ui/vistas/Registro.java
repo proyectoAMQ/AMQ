@@ -138,7 +138,7 @@ public class Registro extends Fragment {
                 else{
 
                     String hash = android.util.Base64
-                            .encodeToString(pass.getText().toString().getBytes(), Base64.DEFAULT);
+                            .encodeToString(pass.getText().toString().getBytes(), Base64.NO_WRAP);
 
                     DtRegistroHuesped dtAltaHuesped = new DtRegistroHuesped(
                             email.getText().toString(),
