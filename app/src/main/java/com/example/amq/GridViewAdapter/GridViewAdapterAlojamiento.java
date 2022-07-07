@@ -23,6 +23,10 @@ import com.example.amq.R;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtHabitacion;
 import com.example.amq.ui.vistas.ListarAlojamientos;
+import com.example.amq.ui.vistas.LoginFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,6 +36,7 @@ public class GridViewAdapterAlojamiento extends BaseAdapter {
     List<DtAlojamiento> dtAlojs;
     Context context;
     LayoutInflater inflter;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     public GridViewAdapterAlojamiento(List<DtAlojamiento> dtAlojs, Context context) {
@@ -104,6 +109,40 @@ public class GridViewAdapterAlojamiento extends BaseAdapter {
 
         TextView descAloj = (TextView) view.findViewById(R.id.descAloj);
         descAloj.setText( dtAlojs.get(i).getDescripcion() );
+
+        ImageView imagenAloj = (ImageView) view.findViewById(R.id.imagen_aloj);
+
+        db.collection("fotos").document(dtAlojs.get(i).getNombre()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    new GridViewAdapterAlojamiento.DownloadImageFromInternet(imagenAloj).execute(documentSnapshot.getString("url1"));
+                }
+            }
+        });
+
         return view;
+    }
+
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage= BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
     }
 }

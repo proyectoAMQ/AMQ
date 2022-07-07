@@ -13,7 +13,6 @@
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintHorizontal_bias="1.0"
         card_view:layout_constraintStart_toStartOf="parent"
@@ -28,7 +27,8 @@
                 android:id="@+id/image_slider"
                 android:layout_width="match_parent"
                 android:layout_height="290dp"
-                android:gravity="top">
+                android:gravity="top"
+                android:layout_marginTop="10dp">
 
             </com.denzcoskun.imageslider.ImageSlider>
 
@@ -53,12 +53,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Alojamiento:"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Descripción:"
                         android:textStyle="bold" />
 
                     <TextView
@@ -114,49 +108,52 @@
                     <TextView
                         android:id="@+id/info_nomAloj"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/info_descAloj"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
                     <TextView
                         android:id="@+id/info_pais"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
                     <TextView
                         android:id="@+id/info_ciudad"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
                     <TextView
                         android:id="@+id/info_direccion"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
                     <TextView
                         android:id="@+id/info_descHab"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
                     <TextView
                         android:id="@+id/info_precio"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
 
                     <TextView
                         android:id="@+id/info_camas"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/info_card_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -281,6 +278,23 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/info_descAloj"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
         </LinearLayout>
