@@ -6,8 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +23,28 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.amq.R;
 import com.example.amq.models.DtEnviarCalificacion;
+import com.example.amq.models.DtFactura;
+import com.example.amq.models.DtFecha;
 import com.example.amq.models.DtReservaAlojHab;
+import com.example.amq.models.PagoEstado;
 import com.example.amq.models.ReservaEstado;
+import com.example.amq.models.paypal.Amount;
+import com.example.amq.models.paypal.DtRefund;
+import com.example.amq.models.paypal.DtRefundReponse;
+import com.example.amq.paypal.PaypalFunctions;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
+import com.example.amq.rest.IPaypalApi;
+import com.example.amq.rest.PaypalEndpoint;
+import com.example.amq.varios.ConnectivityCheck;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,17 +58,24 @@ import retrofit2.Response;
 public class ReservaInfo extends Fragment {
 
     SharedPreferences preferences;
+    String jwToken = null;
+
     private int idReserva;
     private DtReservaAlojHab reserva;
     private boolean isEditable_calificar=false;
     private View reservaInfoView;
     Button btnCalificar;
+    Button btnCancelar;
+
     ImageSlider slider;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     TextView calAnfitrion;
     TextView resena;
     TextView estado;
+
+    Double devolucion_monto = null;
+    Double devolucion_id = null;
 
 
 
@@ -79,6 +99,7 @@ public class ReservaInfo extends Fragment {
             reserva =(DtReservaAlojHab) getArguments().getSerializable("reserva");
         }
         preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        jwToken = preferences.getString("jwToken", "");
     }
 
     @Override
@@ -93,6 +114,7 @@ public class ReservaInfo extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         reservaInfoView = view;
         btnCalificar = view.findViewById(R.id.reserva_btncalificar);
+        btnCancelar = view.findViewById(R.id.reserva_btnCancelar);
 
         slider = view.findViewById(R.id.image_sliderReserva);
         final List<SlideModel> imagenesFire = new ArrayList<>();
@@ -215,7 +237,6 @@ public class ReservaInfo extends Fragment {
     }
 
     private void calificar( int idRes, int idAnf, int calif, String resena ){
-        String jwToken =  preferences.getString("jwToken" , "aa" );
         IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
         DtEnviarCalificacion dtEnviarCalificacion = new DtEnviarCalificacion(
                 idAnf, idRes, calif, resena
@@ -246,36 +267,149 @@ public class ReservaInfo extends Fragment {
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String token = preferences.getString("jwToken","aa");
-                IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
-                Call<Object> call = iAmqApi.cancelarReservaAprobada(token , reserva.getRes_id());
-                btnCancelar.setEnabled(false);
-                call.enqueue(new Callback<Object>() {
-                    @Override
-                    public void onResponse(Call<Object> call, Response<Object> response) {
-                        if( response.code()==200 ) {
-                            Object o = response.body();
-                            estado.setText("RECHAZADA");
-                            btnCancelar.setVisibility(View.GONE);
-                            reservaInfoView.findViewById(R.id.reserva_layout_cancelar).setEnabled(false);
-                            Toast.makeText(getContext(), "Reserva cancelada.", Toast.LENGTH_LONG).show();
-                        }
-                        else if( response.code()==403){
-                            btnCancelar.setEnabled(true);
-                            Toast.makeText(getContext(), "Su sesión caducó", Toast.LENGTH_LONG).show();
-                        }
-                        else{
-                            btnCancelar.setEnabled(true);
-                            Toast.makeText(getContext(), "Error: "+response.headers().get("AMQ_ERROR"), Toast.LENGTH_LONG).show();
-                        }
-                    }
+                cancelarReserva();
+            }
+        });
+    }
 
-                    @Override
-                    public void onFailure(Call<Object> call, Throwable t) {
-                        Toast.makeText(getContext(), "Error en el servidor.", Toast.LENGTH_LONG).show();
-                    }
-                });
+    private void cancelarReserva() {
 
+        //Verifica conectividad y caducidad de la sesion
+        IAmqApi amqApi = AMQEndpoint.getIAmqApi();
+        Call<Object> call = amqApi.esValidoTokenHuesped(jwToken);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if(response.code()==403){
+                    //Debe reloguearse
+                    Navigation.findNavController(reservaInfoView).navigate(R.id.navigation_home, new Bundle());
+                }
+                else{ //Sesion vigente
+                    try {
+                        devolucionPaypal();
+                    }
+                    catch(Exception e){
+                        Log.e("Devolución paypal: ",
+                                e.getMessage()==null ? "Error inesperado" : e.getMessage());
+                    }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                if(t instanceof ConnectException){
+                    Log.e("Connection:", t.getMessage());
+                }
+                Log.e("ERROR" , t.getMessage());
+            }
+        });
+    }
+
+    private void devolucionPaypal() throws Exception{
+        List<DtFactura> facturas = reserva.getFacturas();
+        String pagoRealizado_orden = null;
+        Double pago_monto = null;
+
+        //Obtiene datos de facturación
+        for( DtFactura fact : facturas){
+            if( fact.getPagoEstado() == PagoEstado.REALIZADO ){
+                pagoRealizado_orden = fact.getIdPaypal();
+            }
+            else if( fact.getPagoEstado() == PagoEstado.PENDIENTE ){
+                pago_monto = fact.getMonto();
+            }
+        }
+
+        if( pagoRealizado_orden==null || pago_monto==null || pago_monto==0 ){
+            throw new Exception("El estado de facturación es inconsistente, por favor póngase en contacto con un administrador.");
+        }
+
+        devolucion_monto = pago_monto/2;
+
+        DtRefund dtRefund = new DtRefund(
+                new Amount(
+                        "USD",
+                        devolucion_monto.toString(),
+                        null
+                ),
+                String.valueOf(reserva.getRes_id())
+        );
+
+        IPaypalApi iPaypalApi = PaypalEndpoint.getIPaypalApi();
+        String paypal_access_token = PaypalFunctions.getAccessToken();
+
+        Call<DtRefundReponse> call = iPaypalApi.refund(
+                paypal_access_token,
+                dtRefund,
+                pagoRealizado_orden
+        );
+
+        call.enqueue(new Callback<DtRefundReponse>() {
+            @Override
+            public void onResponse(Call<DtRefundReponse> call, Response<DtRefundReponse> response) {
+                if( response.code()==200 ){
+                    DtRefundReponse refund = response.body();
+                    String id = refund.getId();
+
+                    Calendar cal = Calendar.getInstance();
+                    int dia = cal.get(Calendar.DAY_OF_MONTH);
+                    int mes = cal.get(Calendar.MONTH) +1;
+                    int anio = cal.get(Calendar.YEAR);
+
+                    DtFactura dtFactura = new DtFactura(
+                            0, PagoEstado.DEVOLUCION, devolucion_monto,
+                            new DtFecha(dia, mes, anio),
+                            false,
+                            0.0,
+                            refund.getId()
+                    );
+
+                    devolucionBack(dtFactura);
+                }
+                else{
+                    Log.e("Paypal refund ", "No se pudo relizar la devolución código http: "
+                            + String.valueOf(response.code()
+                            + response.errorBody().toString() )
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DtRefundReponse> call, Throwable t) {
+                Log.e("Paypal refund ", "No se pudo relizar la devolución " +
+                        t.getMessage() == null ? "" : t.getMessage());
+            }
+        });
+    }
+
+    private void devolucionBack(DtFactura dtFactura){
+        IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
+        Call<Object> call = iAmqApi.cancelarReservaAprobada(jwToken , reserva.getRes_id());
+        btnCancelar.setEnabled(false);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if( response.code()==200 ) {
+                    Object o = response.body();
+                    estado.setText("RECHAZADA");
+                    btnCancelar.setVisibility(View.GONE);
+                    reservaInfoView.findViewById(R.id.reserva_layout_cancelar).setEnabled(false);
+                    Toast.makeText(getContext(), "Reserva cancelada.", Toast.LENGTH_LONG).show();
+                }
+                else if( response.code()==403){
+                    btnCancelar.setEnabled(true);
+                    Toast.makeText(getContext(), "Su sesión caducó", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    btnCancelar.setEnabled(true);
+                    Toast.makeText(getContext(), "Error: "+response.headers().get("AMQ_ERROR"), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Toast.makeText(getContext(), "Error en el servidor.", Toast.LENGTH_LONG).show();
             }
         });
     }
