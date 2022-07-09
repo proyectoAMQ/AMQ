@@ -1,4 +1,4 @@
-package com.example.amq.GridViewAdapter;
+package com.example.amq.gridViewAdapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,25 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.amq.R;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtHabitacion;
-import com.example.amq.ui.vistas.ListarAlojamientos;
-import com.example.amq.ui.vistas.LoginFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GridViewAdapterAlojamiento extends BaseAdapter {

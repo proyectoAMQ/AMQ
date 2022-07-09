@@ -17,13 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.amq.GridViewAdapter.GridViewAdapterAlojamiento;
-import com.example.amq.GridViewAdapter.GridViewAdapterReserva;
+import com.example.amq.gridViewAdapter.GridViewAdapterReserva;
 import com.example.amq.R;
-import com.example.amq.models.DtAlojamiento;
-import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtResHuespEstado;
 import com.example.amq.models.DtReservaAlojHab;
 import com.example.amq.models.ReservaEstado;

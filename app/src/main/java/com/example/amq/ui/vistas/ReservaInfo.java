@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -22,6 +21,7 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.amq.R;
+import com.example.amq.alerts.Alert;
 import com.example.amq.models.DtEnviarCalificacion;
 import com.example.amq.models.DtFactura;
 import com.example.amq.models.DtFecha;
@@ -36,7 +36,6 @@ import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
 import com.example.amq.rest.IPaypalApi;
 import com.example.amq.rest.PaypalEndpoint;
-import com.example.amq.varios.ConnectivityCheck;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -155,13 +154,13 @@ public class ReservaInfo extends Fragment {
             califLayout.setVisibility(View.VISIBLE);
             if (reserva.getRes_calificacion() != null) {
                 int calHu = reserva.getRes_calificacion().getCalificacionHuesped();
-                calHuesped.setText(String.valueOf(calHu < 1 ? "" : calHu));
+                calHuesped.setText(String.valueOf(calHu < 1 ? "-" : calHu));
 
                 int calAn = reserva.getRes_calificacion().getCalificacionAnfitrion();
-                calAnfitrion.setText(String.valueOf(calAn < 1 ? "" : calAn));
+                calAnfitrion.setText(String.valueOf(calAn < 1 ? "-" : calAn));
 
                 String resenaAloj = reserva.getRes_calificacion().getResena();
-                resena.setText(resenaAloj == null ? "" : resenaAloj);
+                resena.setText(resenaAloj == null ? "-" : resenaAloj);
             } else {
                 calHuesped.setText("-");
                 calAnfitrion.setText("-");
@@ -194,15 +193,15 @@ public class ReservaInfo extends Fragment {
                                     ? ""
                                     : calAnf.getText().toString()
                     );
-                    calAnf.setHint("Ingrese calificación");
 
                     resena.setEnabled(true);
+                    resena.setHint("Ingrese reseña de alojamiento");
                     resena.setText(
                             resena.getText().toString().trim().equals("-")
                                     ? ""
                                     : resena.getText().toString()
                     );
-                    calAnf.setHint("Ingrese reseña de alojamiento");
+                    calAnf.setHint("Califique al anfitrión");
                     ((Button)view).setText("Guardar calificación");
                     isEditable_calificar=true;
                 }
@@ -256,7 +255,12 @@ public class ReservaInfo extends Fragment {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-                Toast.makeText(getContext(), "Se produjo un error", Toast.LENGTH_LONG).show();
+                Alert.alertConfirm(
+                        reservaInfoView,
+                        "Error de conectividad",
+                        "Se produjo un error de conectividad con el servidor, para continuar presione OK",
+                        -1
+                );
             }
         });
 
@@ -267,28 +271,37 @@ public class ReservaInfo extends Fragment {
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cancelarReserva();
+                cancelarReserva_checkConectividad();
             }
         });
     }
 
-    private void cancelarReserva() {
-
-        //Verifica conectividad y caducidad de la sesion
+    private void cancelarReserva_checkConectividad() {
+        //Verifica conectividad com amq y caducidad de la sesion
         IAmqApi amqApi = AMQEndpoint.getIAmqApi();
         Call<Object> call = amqApi.esValidoTokenHuesped(jwToken);
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if(response.code()==403){
-                    //Debe reloguearse
-                    Navigation.findNavController(reservaInfoView).navigate(R.id.navigation_home, new Bundle());
+                    Alert.alertConfirm(
+                            reservaInfoView,
+                            "Sesion inválida",
+                            "La sesión caducó, precione OK para continuar.",
+                            R.id.login_fragment
+                    );
                 }
-                else{ //Sesion vigente
+                else{
                     try {
                         devolucionPaypal();
                     }
                     catch(Exception e){
+                        Alert.alertConfirm(
+                                reservaInfoView,
+                                "Error paypal",
+                                "Se produjo un error al realizar la devolución através de paypal.",
+                                -1
+                        );
                         Log.e("Devolución paypal: ",
                                 e.getMessage()==null ? "Error inesperado" : e.getMessage());
                     }
@@ -298,9 +311,20 @@ public class ReservaInfo extends Fragment {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
+                String mensaje;
                 if(t instanceof ConnectException){
-                    Log.e("Connection:", t.getMessage());
+                    mensaje = "Error de conectividad con servidor AMQ";
+
+                }else{
+                    mensaje = "Error desconocido en servidor AMQ";
                 }
+                Alert.alertConfirm(
+                        reservaInfoView,
+                        "Error de servidor",
+                        mensaje,
+                        -1
+                );
+
                 Log.e("ERROR" , t.getMessage());
             }
         });
@@ -368,6 +392,12 @@ public class ReservaInfo extends Fragment {
                     devolucionBack(dtFactura);
                 }
                 else{
+                    Alert.alertConfirm(
+                            reservaInfoView,
+                            "Error paypal",
+                            "Error al realizar la devolución através de paypal",
+                            -1
+                    );
                     Log.e("Paypal refund ", "No se pudo relizar la devolución código http: "
                             + String.valueOf(response.code()
                             + response.errorBody().toString() )
@@ -377,6 +407,19 @@ public class ReservaInfo extends Fragment {
 
             @Override
             public void onFailure(Call<DtRefundReponse> call, Throwable t) {
+                String mensaje=null;
+                if(t instanceof ConnectException){
+                    mensaje = "Error de conectividad con servidor Paypal";
+                }
+                else{
+                    mensaje = "Error desconocido en servidor Paypal";
+                }
+                Alert.alertConfirm(
+                        reservaInfoView,
+                        "Error paypal",
+                        mensaje,
+                        -1
+                );
                 Log.e("Paypal refund ", "No se pudo relizar la devolución " +
                         t.getMessage() == null ? "" : t.getMessage());
             }
@@ -395,21 +438,45 @@ public class ReservaInfo extends Fragment {
                     estado.setText("RECHAZADA");
                     btnCancelar.setVisibility(View.GONE);
                     reservaInfoView.findViewById(R.id.reserva_layout_cancelar).setEnabled(false);
-                    Toast.makeText(getContext(), "Reserva cancelada.", Toast.LENGTH_LONG).show();
+                    Alert.alertConfirm(
+                            reservaInfoView,
+                            "Reserva cancelada",
+                            "La reserva con id "+String.valueOf(reserva.getRes_id()+
+                                    " ha sido cancelada, presione OK para continuar"),
+                            -1
+                    );
                 }
                 else if( response.code()==403){
-                    btnCancelar.setEnabled(true);
-                    Toast.makeText(getContext(), "Su sesión caducó", Toast.LENGTH_LONG).show();
+                    Alert.alertConfirm(
+                            reservaInfoView,
+                            "Sesión inválida",
+                            "La sesión ha caducado, presione OK, para continuar",
+                            R.id.login_fragment
+                    );
+                    Log.e("ERROR", "Sesión caduca después de realizar devolución paypal");
                 }
                 else{
                     btnCancelar.setEnabled(true);
-                    Toast.makeText(getContext(), "Error: "+response.headers().get("AMQ_ERROR"), Toast.LENGTH_LONG).show();
+                    Alert.alertConfirm(
+                            reservaInfoView,
+                            "Erro desconocido",
+                            "Se produjo un error desconocido al realizar cancelación en AMQ, " +
+                                    "presione OK para continuar",
+                            R.id.login_fragment
+                    );
                 }
             }
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-                Toast.makeText(getContext(), "Error en el servidor.", Toast.LENGTH_LONG).show();
+                Alert.alertConfirm(
+                        reservaInfoView,
+                        "Error desconocido",
+                        "Se produjo un error desconocido al realizar cancelación en AMQ, " +
+                                "presione OK para continuar.",
+                        R.id.login_fragment
+                );
+                Log.e( "ERROR", t.getMessage() );
             }
         });
     }

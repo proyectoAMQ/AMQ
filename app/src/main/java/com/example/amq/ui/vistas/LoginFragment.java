@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.amq.R;
+import com.example.amq.alerts.Alert;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtUsuario;
@@ -58,6 +59,7 @@ public class LoginFragment extends Fragment {
     SharedPreferences preferences;
     private String pushToken;
     IAmqApi amqApi = null;
+    View view;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -129,6 +131,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.view = view;
 
         preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
         int idUsr = preferences.getInt("idUsuario", 0 );
@@ -180,10 +183,12 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-                if(t instanceof ConnectException ){
-                    Log.e("Connection:", t.getMessage());
-                }
-                Log.e("ERROR" , t.getMessage());
+                Alert.alertConfirm(
+                        view,
+                        "Conectividad",
+                        "Error de conectividad, presione OK, para intentar nuevamente.",
+                        R.id.login_fragment
+                );
             }
         });
     }

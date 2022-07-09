@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.amq.R;
+import com.example.amq.alerts.Alert;
 import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtRegistroHuesped;
 import com.example.amq.rest.AMQEndpoint;
@@ -151,33 +152,11 @@ public class Registro extends Fragment {
                     call.enqueue(new Callback<Object>() {
                         @Override
                         public void onResponse(Call<Object> call, Response<Object> response) {
-                            if( response.code()==403){
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("Sesión: ")
-                                        .setMessage("La sesión ha caducado, presione OK para iniciar sesión nuevamente.")
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                                SharedPreferences preferences = PreferenceManager
-                                                        .getDefaultSharedPreferences(getContext());
-                                                SharedPreferences.Editor editor = preferences.edit();
-                                                editor.remove("emailUsuario");
-                                                editor.remove("idUsuario");
-                                                editor.remove("jwToken");
-                                                editor.apply();
-                                                Navigation.findNavController(getView()).navigate(R.id.login_fragment, new Bundle());
-                                            }}).show();
-                            }
-                            new AlertDialog.Builder(getContext())
-                                    .setTitle("Registro")
-                                    .setMessage("El registro fué exitoso, presione OK para ir al inicio de sesión.")
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            Navigation.findNavController(view).navigate(R.id.login_fragment, new Bundle());
-                                        }}).show();
+                            Alert.alertConfirm(view,
+                                    "Registro",
+                                    "El registro fué exitoso, presione OK para ir al inicio de sesión.",
+                                    R.id.login_fragment
+                            );
                              Log.i("REGISTRO ", "onResponse: OK ");
                         }
 

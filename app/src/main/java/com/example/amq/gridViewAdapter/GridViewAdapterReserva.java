@@ -1,4 +1,4 @@
-package com.example.amq.GridViewAdapter;
+package com.example.amq.gridViewAdapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -19,7 +18,6 @@ import com.example.amq.models.DtReservaAlojHab;
 import com.example.amq.models.ReservaEstado;
 
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
