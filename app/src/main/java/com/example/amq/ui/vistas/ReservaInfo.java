@@ -56,17 +56,17 @@ import retrofit2.Response;
  */
 public class ReservaInfo extends Fragment {
 
-    SharedPreferences preferences;
-    String jwToken = null;
+    private SharedPreferences preferences;
+    private String jwToken = null;
 
-    private int idReserva;
+    private int idReserva=0;
     private DtReservaAlojHab reserva;
     private boolean isEditable_calificar=false;
     private View reservaInfoView;
-    Button btnCalificar;
-    Button btnCancelar;
+    private Button btnCalificar;
+    private Button btnCancelar;
 
-    ImageSlider slider;
+    private ImageSlider slider;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     TextView calAnfitrion;
@@ -74,15 +74,12 @@ public class ReservaInfo extends Fragment {
     TextView estado;
 
     Double devolucion_monto = null;
-    Double devolucion_id = null;
-
-
 
     public ReservaInfo() {
         // Required empty public constructor
     }
 
-    public static ReservaInfo newInstance(String param1, String param2) {
+    public static ReservaInfo newInstance() {
         ReservaInfo fragment = new ReservaInfo();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -117,16 +114,19 @@ public class ReservaInfo extends Fragment {
 
         slider = view.findViewById(R.id.image_sliderReserva);
         final List<SlideModel> imagenesFire = new ArrayList<>();
-        db.collection("fotos").document(reserva.getAloj_nombre()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url1"), ScaleTypes.FIT));
-                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url2"), ScaleTypes.FIT));
-                    imagenesFire.add(new SlideModel(documentSnapshot.getString("url3"), ScaleTypes.FIT));
-                    slider.setImageList(imagenesFire, ScaleTypes.FIT);
-                }
-            }
+        db.collection("fotos")
+                .document(reserva.getAloj_nombre())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            imagenesFire.add(new SlideModel(documentSnapshot.getString("url1"), ScaleTypes.FIT));
+                            imagenesFire.add(new SlideModel(documentSnapshot.getString("url2"), ScaleTypes.FIT));
+                            imagenesFire.add(new SlideModel(documentSnapshot.getString("url3"), ScaleTypes.FIT));
+                            slider.setImageList(imagenesFire, ScaleTypes.FIT);
+                        }
+                    }
         });
 
         TextView nomAloj = view.findViewById(R.id.reserva_aloj_nombre);

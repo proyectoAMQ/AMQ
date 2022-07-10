@@ -23,6 +23,7 @@
         <entry key="app/src/main/res/layout/fragment_reserva_info.xml" value="0.13360507246376813" />
         <entry key="app/src/main/res/layout/fragment_reservar.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/fragment_reservas.xml" value="0.18854166666666666" />
+        <entry key="app/src/main/res/layout/fragment_usuario_info.xml" value="0.18" />
         <entry key="app/src/main/res/layout/grid_view_item.xml" value="0.10891590678824721" />
         <entry key="app/src/main/res/layout/grid_view_item_alojamiento.xml" value="0.1693840579710145" />
         <entry key="app/src/main/res/layout/grid_view_item_reserva.xml" value="0.18854166666666666" />

@@ -56,4 +56,9 @@ public interface IAmqApi {
     @GET("/reserva/cancelarReservaAprobada/{idreserva}")
     public Call<Object> cancelarReservaAprobada(@Header("Authorization") String authHeader,
                                  @Path("idreserva") int idreserva );
+
+
+    @POST("/usuario/buscar/{idUsr}")
+    public Call<DtUsuario> buscarUsuario(@Header("Authorization") String authHeader,
+                                                @Path("idUsr") int idUsr );
 }
