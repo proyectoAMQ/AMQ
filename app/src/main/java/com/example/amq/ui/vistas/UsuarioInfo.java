@@ -1,5 +1,7 @@
 package com.example.amq.ui.vistas;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -104,6 +106,14 @@ public class UsuarioInfo extends Fragment {
             }
         });
 
+        Button btnEliminarCuenta = view.findViewById(R.id.usuarioInfo_btneliminar);
+        btnEliminarCuenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eliminarCuenta( jwToken, idUsuario );
+            }
+        });
+
         setCalificacion( jwToken, idUsuario);
     }
 
@@ -158,11 +168,11 @@ public class UsuarioInfo extends Fragment {
                     );
                 }
                 else{
+                    String headerError = response.headers().get("AMQ_ERROR");
                     Alert.alertConfirm(
                             usuarioInfoView,
-                            "Error desconocido",
-                            "Se ha producido un error al obtener los datos de usuario, " +
-                                    "presione OK para continuar.",
+                            "Error de servidor",
+                            headerError==null || headerError.equals("") ? "Error desconocido" : headerError,
                             -1
                     );
                 }
@@ -170,6 +180,78 @@ public class UsuarioInfo extends Fragment {
 
             @Override
             public void onFailure(Call<DtUsuario> call, Throwable t) {
+                String mensaje = null;
+                if( t instanceof ConnectException ){
+                    mensaje = "Se ha producido un error al conectar con el servidor AMQ, " +
+                            "presiones OK para continuar.";
+                }
+                else{
+                    mensaje = "Error desconocido, presione OK para continuar.";
+                }
+
+                Alert.alertConfirm(
+                        usuarioInfoView,
+                        "Error de conectividad",
+                        mensaje,
+                        -1
+                );
+            }
+        });
+    }
+
+    private void eliminarCuenta( String jwToken, int idUsr){
+        new AlertDialog.Builder(usuarioInfoView.getContext())
+                .setTitle("Eliminar cuenta")
+                .setMessage("¿Realmente desea eliminar su cuenta de Aquí Me Quedo?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }})
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        eliminarCuentaRest(jwToken, idUsr );
+                    }}).show();
+    }
+
+    private void eliminarCuentaRest( String jwToken, int idUsr ){
+        IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
+        Call<Object> call = iAmqApi.eliminarUsuario(jwToken, idUsr);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if( response.code()==403 ){
+                    Alert.alertConfirm(
+                            usuarioInfoView,
+                            "Sesión inválida",
+                            "La sesión ha caducado, presione OK para continuar",
+                            R.id.login_fragment
+                    );
+                }
+                else if( response.code() == 200 ){
+                    SharedPreferences.Editor editor  = preferences.edit();
+                    editor.clear();
+                    editor.commit();
+
+                    Alert.alertConfirm(
+                            usuarioInfoView,
+                            "Eliminar cuenta",
+                            "Su cuenta ha sido eliminada, presion OK para continuar",
+                            R.id.login_fragment
+                    );
+                }
+                else{
+                    String headerError = response.headers().get("AMQ_ERROR");
+                    Alert.alertConfirm(
+                        usuarioInfoView,
+                        "Error de servidor",
+                        headerError==null || headerError.equals("") ? "Error desconocido" : headerError,
+                        -1
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
                 String mensaje = null;
                 if( t instanceof ConnectException ){
                     mensaje = "Se ha producido un error al conectar con el servidor AMQ, " +

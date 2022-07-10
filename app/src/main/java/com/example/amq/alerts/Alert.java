@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.Navigation;
@@ -12,6 +13,7 @@ import com.example.amq.R;
 
 public class Alert {
     public static void alertConfirm(View view, String titulo, String mensaje, int redirect){
+        Log.i(titulo, mensaje);
         new AlertDialog.Builder(view.getContext())
                 .setTitle(titulo)
                 .setMessage(mensaje)

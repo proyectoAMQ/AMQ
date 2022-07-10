@@ -61,4 +61,9 @@ public interface IAmqApi {
     @POST("/usuario/buscar/{idUsr}")
     public Call<DtUsuario> buscarUsuario(@Header("Authorization") String authHeader,
                                                 @Path("idUsr") int idUsr );
+
+    @POST("/usuario/desactivar/{id}")
+    public Call<Object> eliminarUsuario(@Header("Authorization") String authHeader,
+                                         @Path("id") int idUsr );
+
 }
