@@ -97,5 +97,11 @@
         tools:layout="@layout/activity_pago" >
     </activity>
 
+    <fragment
+        android:id="@+id/fragment_cambio_pass"
+        android:name="com.example.amq.ui.vistas.UsuarioCambioPass"
+        android:label="Cambio Contraseña"
+    tools:layout="@layout/fragment_cambio_pass" >
+    </fragment>
 
 </navigation>

@@ -186,9 +186,17 @@ public class LoginFragment extends Fragment {
                 Alert.alertConfirm(
                         view,
                         "Conectividad",
-                        "Error de conectividad, presione OK, para intentar nuevamente.",
+                        "Error de conectividad, presione OK para intentar nuevamente.",
                         R.id.login_fragment
                 );
+            }
+        });
+
+        Button btnCambiopass = view.findViewById(R.id.login_cambioPass);
+        btnCambiopass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.fragment_cambio_pass);
             }
         });
     }

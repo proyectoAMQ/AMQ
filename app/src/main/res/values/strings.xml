@@ -40,4 +40,7 @@
     <string name="ingrese_su_apellido">Ingrese su apellido</string>
     <string name="ingrese_su_contrase_a">Ingrese su contraseña</string>
     <string name="confirme_su_contrase_a">Confirme su contraseña</string>
+    <string name="enviar_correo_cambio_pass">Enviar correo reseteo</string>
+    <string name="ingresar_c_digo_de_cambio_pass">INGRESAR CÓDIGO DE RESETEO</string>
+    <string name="cambiar_contrase_a">Cambiar contraseña</string>
 </resources>

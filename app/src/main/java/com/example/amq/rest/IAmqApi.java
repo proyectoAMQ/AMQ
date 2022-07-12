@@ -7,9 +7,11 @@ import com.example.amq.models.DtEnviarCalificacion;
 import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtIdValor;
+import com.example.amq.models.DtPassword;
 import com.example.amq.models.DtRegistroHuesped;
 import com.example.amq.models.DtResHuespEstado;
 import com.example.amq.models.DtReservaAlojHab;
+import com.example.amq.models.DtResetEmail;
 import com.example.amq.models.DtUsuario;
 
 import java.util.List;
@@ -65,5 +67,11 @@ public interface IAmqApi {
     @POST("/usuario/desactivar/{id}")
     public Call<Object> eliminarUsuario(@Header("Authorization") String authHeader,
                                          @Path("id") int idUsr );
+
+    @POST("/usuario/resetPassword")
+    public Call<Object> cambiarPassEnviarEmail(@Body DtResetEmail dtResetEmail );
+
+    @POST("/usuario/savePassword")
+    public Call<Object> cambiarPass(@Body DtPassword dtPassword );
 
 }
