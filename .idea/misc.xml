@@ -8,8 +8,10 @@
         <entry key="app/src/main/res/layout/activity_pago.xml" value="0.1875" />
         <entry key="app/src/main/res/layout/activity_pago_brain_tree.xml" value="0.23489583333333333" />
         <entry key="app/src/main/res/layout/activity_pago_error.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_pago_ok.xml" value="0.16802536231884058" />
         <entry key="app/src/main/res/layout/activity_payment_details.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/activity_resultado_pago.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_cambio_pass.xml" value="0.16802536231884058" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.3115942028985507" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_info_aloj_hab.xml" value="0.1" />

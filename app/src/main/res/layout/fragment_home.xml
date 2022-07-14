@@ -7,122 +7,133 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-
-    <com.denzcoskun.imageslider.ImageSlider
-        android:id="@+id/image_sliderInicio"
-        android:layout_width="400dp"
-        android:layout_height="311dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="14dp"
-        android:gravity="top"
-        android:background="@android:color/transparent" >
-
-    </com.denzcoskun.imageslider.ImageSlider>
-
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imageViewInicio"
-            android:layout_width="227dp"
-            android:layout_height="144dp"
-            android:layout_marginStart="91dp"
-            android:layout_marginTop="43dp"
-            android:layout_marginEnd="93dp" />
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/image_sliderInicio"
+                android:layout_width="400dp"
+                android:layout_height="311dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="14dp"
+                android:gravity="top"
+                android:background="@android:color/transparent" >
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="327dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="43dp"
-            android:layout_marginTop="250dp"
-            android:layout_marginEnd="212dp"
-            android:shadowColor="#000000"
-            android:shadowDx="3"
-            android:shadowDy="3"
-            android:shadowRadius="15"
-            android:strokeWidth="20"
-            android:strokeColor="#000000"
-            android:text="EMPEZA YA TUS VACACIONES!!!"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#000000"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+            </com.denzcoskun.imageslider.ImageSlider>
 
-    </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/buscarAlojamientos"
-        android:layout_width="387dp"
-        android:layout_height="52dp"
-        android:layout_below="@+id/dropPrecio"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="15dp"
-        android:text="ENCONTRA TU LUGAR" />
+                <ImageView
+                    android:id="@+id/imageViewInicio"
+                    android:layout_width="227dp"
+                    android:layout_height="144dp"
+                    android:layout_marginStart="91dp"
+                    android:layout_marginTop="43dp"
+                    android:layout_marginEnd="93dp" />
 
-    <Spinner
-        android:id="@+id/dropPais"
-        android:layout_width="150dp"
-        android:layout_height="33dp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="32dp" />
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="327dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="43dp"
+                    android:layout_marginTop="250dp"
+                    android:layout_marginEnd="212dp"
+                    android:shadowColor="#000000"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="15"
+                    android:strokeWidth="20"
+                    android:strokeColor="#000000"
+                    android:text="EMPEZA YA TUS VACACIONES!!!"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#000000"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-    <Spinner
-        android:id="@+id/dropPrecio"
-        android:layout_width="186dp"
-        android:layout_height="33dp"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="24dp"
-        android:layout_toStartOf="@+id/dropPais" />
+            </FrameLayout>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image_sliderInicio"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="26dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="70dp"
-        android:layout_toStartOf="@+id/textView2"
-        android:shadowColor="#000000"
-        android:shadowDx="3"
-        android:shadowDy="3"
-        android:shadowRadius="15"
-        android:strokeWidth="20"
-        android:strokeColor="#000000"
-        android:text="RANGO PRECIOS"
-        android:textSize="16dp"
-        android:textStyle="bold" />
+            <Button
+                android:id="@+id/buscarAlojamientos"
+                android:layout_width="387dp"
+                android:layout_height="52dp"
+                android:layout_below="@+id/dropPrecio"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="9dp"
+                android:layout_marginTop="44dp"
+                android:layout_marginEnd="15dp"
+                android:text="ENCONTRA TU LUGAR" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image_sliderInicio"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="130dp"
-        android:shadowColor="#000000"
-        android:shadowDx="3"
-        android:shadowDy="3"
-        android:shadowRadius="15"
-        android:strokeWidth="20"
-        android:strokeColor="#000000"
-        android:text="PAIS"
-        android:textSize="18dp"
-        android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/dropPais"
+                android:layout_width="150dp"
+                android:layout_height="33dp"
+                android:layout_below="@+id/textView2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="32dp" />
+
+            <Spinner
+                android:id="@+id/dropPrecio"
+                android:layout_width="186dp"
+                android:layout_height="33dp"
+                android:layout_below="@+id/textView3"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="24dp"
+                android:layout_toStartOf="@+id/dropPais" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_sliderInicio"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="70dp"
+                android:layout_toStartOf="@+id/textView2"
+                android:shadowColor="#000000"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="15"
+                android:strokeWidth="20"
+                android:strokeColor="#000000"
+                android:text="RANGO PRECIOS"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_sliderInicio"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="130dp"
+                android:shadowColor="#000000"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="15"
+                android:strokeWidth="20"
+                android:strokeColor="#000000"
+                android:text="PAIS"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

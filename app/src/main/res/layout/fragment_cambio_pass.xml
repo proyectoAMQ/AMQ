@@ -9,156 +9,168 @@
     android:background="@drawable/gradient_drawable"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageViewRegistro"
-        android:layout_width="365dp"
-        android:layout_height="222dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.521"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="CAMBIO DE CONTRASEÑA"
-        android:textAlignment="center"
-        android:textSize="18dp"
-        android:textStyle="bold"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewRegistro" />
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cambioPass_layEnviarToken"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7">
+            <ImageView
+                android:id="@+id/imageViewRegistro"
+                android:layout_width="365dp"
+                android:layout_height="222dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.521"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/cambioPass_email"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="6dp"
-            android:gravity="fill_horizontal"
-            android:hint="@string/ingrese_su_email"
-            android:inputType="textEmailAddress"
-            android:lines="1"
-            android:selectAllOnFocus="true"
-            app:layout_constraintHorizontal_bias="0.521"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="CAMBIO DE CONTRASEÑA"
+                android:textAlignment="center"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewRegistro" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cambioPass_layEnviarToken"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView7">
 
-
-        <Button
-            android:id="@+id/cambioPass_btnEnviarToken"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/enviar_correo_cambio_pass"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cambioPass_email"></Button>
-
-        <Button
-            android:id="@+id/cambioPass_btnVerCampos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="Ya tengo un código ..."
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cambioPass_btnEnviarToken"></Button>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cambioPass_layIngresarToken"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cambioPass_layEnviarToken">
-
-        <EditText
-            android:id="@+id/cambioPass_txtToken"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="6dp"
-            android:autofillHints="Ingrese el codigo recibido por correo"
-            android:gravity="fill_horizontal"
-            android:hint="Ingrese el código recibido por email."
-            android:inputType="textEmailAddress"
-            android:lines="1"
-            android:selectAllOnFocus="true"
-            app:layout_constraintHorizontal_bias="0.521"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                <EditText
+                    android:id="@+id/cambioPass_email"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="6dp"
+                    android:gravity="fill_horizontal"
+                    android:hint="@string/ingrese_su_email"
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:selectAllOnFocus="true"
+                    app:layout_constraintHorizontal_bias="0.521"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
 
-        <EditText
-            android:id="@+id/cambioPass_txtPass"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="6dp"
-            android:gravity="fill_horizontal"
-            android:hint="Ingrese nueva contraseña"
-            android:inputType="textEmailAddress"
-            android:lines="1"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cambioPass_txtToken"
-            app:layout_constraintStart_toStartOf="parent" />
-        <EditText
-            android:id="@+id/cambioPass_txtConfirmPass"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="6dp"
-            android:gravity="fill_horizontal"
-            android:hint="Confirmar contraseña"
-            android:inputType="textEmailAddress"
-            android:lines="1"
-            android:selectAllOnFocus="true"
-            app:layout_constraintTop_toBottomOf="@+id/cambioPass_txtPass"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-        <Button
-            android:id="@+id/cambioPass_btnCambiarPass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/cambiar_contrase_a"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cambioPass_txtConfirmPass"></Button>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/cambioPass_btnEnviarToken"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/enviar_correo_cambio_pass"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cambioPass_email"></Button>
+
+                <Button
+                    android:id="@+id/cambioPass_btnVerCampos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Ya tengo un código ..."
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cambioPass_btnEnviarToken"></Button>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cambioPass_layIngresarToken"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cambioPass_layEnviarToken">
+
+                <EditText
+                    android:id="@+id/cambioPass_txtToken"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="6dp"
+                    android:autofillHints="Ingrese el codigo recibido por correo"
+                    android:gravity="fill_horizontal"
+                    android:hint="Ingrese el código recibido por email."
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:selectAllOnFocus="true"
+                    app:layout_constraintHorizontal_bias="0.521"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+
+                <EditText
+                    android:id="@+id/cambioPass_txtPass"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="6dp"
+                    android:gravity="fill_horizontal"
+                    android:hint="Ingrese nueva contraseña"
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:selectAllOnFocus="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cambioPass_txtToken"
+                    app:layout_constraintStart_toStartOf="parent" />
+                <EditText
+                    android:id="@+id/cambioPass_txtConfirmPass"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="6dp"
+                    android:gravity="fill_horizontal"
+                    android:hint="Confirmar contraseña"
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:selectAllOnFocus="true"
+                    app:layout_constraintTop_toBottomOf="@+id/cambioPass_txtPass"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+                <Button
+                    android:id="@+id/cambioPass_btnCambiarPass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/cambiar_contrase_a"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cambioPass_txtConfirmPass"></Button>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

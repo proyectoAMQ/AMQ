@@ -9,11 +9,15 @@
     tools:context=".ui.vistas.PagoOK">
 
     <TextView
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:paddingHorizontal="10dp"
         android:id="@+id/resultadoPagoOK_texto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="El pago se realizó correctamente, notificaremos al anfitrión del alojamiento seleccionado para que confirme su reserva, presione OK para volver al inicio"/>
     <Button
+        android:layout_margin="10dp"
         android:id="@+id/resultadoPagoOK_btnVolver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

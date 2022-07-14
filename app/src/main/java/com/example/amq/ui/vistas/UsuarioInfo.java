@@ -94,8 +94,6 @@ public class UsuarioInfo extends Fragment {
         usuarioInfoView = view;
         textViewCalificacion = view.findViewById(R.id.usuarioInfo_calificacion);
 
-        BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.VISIBLE);
 
         db.collection("fotos").document("Elementos").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

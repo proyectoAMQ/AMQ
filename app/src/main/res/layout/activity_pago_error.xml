@@ -9,15 +9,19 @@
     tools:context=".ui.vistas.PagoError">
 
     <TextView
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:paddingHorizontal="10dp"
         android:id="@+id/resultadoPagoError_texto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="El pago fué cancelado, presione OK para volver al inicio."/>
 
     <Button
+        android:layout_margin="10dp"
         android:id="@+id/resultadoPagoError_btnVolver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OK"/>
+        android:text="OK" />
 
 </LinearLayout>
