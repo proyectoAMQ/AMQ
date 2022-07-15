@@ -343,6 +343,7 @@ public class ReservaInfo extends Fragment {
         for( DtFactura fact : facturas){
             if( fact.getPagoEstado() == PagoEstado.REALIZADO ){
                 pagoRealizado_orden = fact.getIdPaypal();
+                pago_monto = fact.getMonto();
             }
             else if( fact.getPagoEstado() == PagoEstado.PENDIENTE ){
                 pago_monto = fact.getMonto();
