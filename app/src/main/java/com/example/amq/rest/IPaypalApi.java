@@ -31,9 +31,10 @@ public interface IPaypalApi {
             @Body DtCreateOrder dtCreateOrder
     );
 
-    @POST("/v2/payments/captures/{capture_id}/refund")
+    @POST("v2/payments/captures/{capture_id}/refund")
     public Call<DtRefundReponse> refund(
             @Header("Authorization") String access_token,
+            @Header("PayPal-Request-Id") String paypal_request_id,
             @Body DtRefund dtRefund,
             @Path("capture_id") String capture_id
     );

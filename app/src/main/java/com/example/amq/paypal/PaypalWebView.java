@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 
 import com.example.amq.MainActivity;
 import com.example.amq.R;
+import com.example.amq.alerts.Alert;
 import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtUsuario;
 import com.example.amq.rest.AMQEndpoint;
@@ -72,7 +73,7 @@ public class PaypalWebView extends WebViewClient {
             call.enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
-                    if( response.code()==403){
+                    if (response.code() == 403) {
                         new AlertDialog.Builder(view.getContext())
                                 .setTitle("Sesión: ")
                                 .setMessage("La sesión ha caducado, presione OK para iniciar sesión nuevamente.")
@@ -89,10 +90,20 @@ public class PaypalWebView extends WebViewClient {
                                         editor.apply();
                                         Navigation.findNavController(view)
                                                 .navigate(R.id.login_fragment, new Bundle());
-                                    }}).show();
-                    }else{
+                                    }
+                                }).show();
+                    }
+                    else if ( response.code() == 200 || response.code() == 201){
                         Intent intent = new Intent(view.getContext(), PagoOK.class);
                         view.getContext().startActivity(intent);
+                    }else{
+                        Alert.alertConfirm(
+                                view,
+                                "Alta de reserva",
+                                "Se produjo un error al dar de alta la reserva, " +
+                                        "presione OK para continuar.",
+                                -1
+                        );
                     }
                 }
 

@@ -4,6 +4,7 @@ import com.example.amq.models.DtAlojHab;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.DtAltaReserva;
 import com.example.amq.models.DtEnviarCalificacion;
+import com.example.amq.models.DtFactura;
 import com.example.amq.models.DtFiltrosAloj;
 import com.example.amq.models.DtLogin;
 import com.example.amq.models.DtIdValor;
@@ -55,9 +56,11 @@ public interface IAmqApi {
     public Call<Object> calificar(@Header("Authorization") String authHeader,
                                   @Body DtEnviarCalificacion dtEnviarCalificacion);
 
-    @GET("/reserva/cancelarReservaAprobada/{idreserva}")
-    public Call<Object> cancelarReservaAprobada(@Header("Authorization") String authHeader,
-                                 @Path("idreserva") int idreserva );
+    @POST("/reserva/cancelarReservaAprobada/{idreserva}")
+    public Call<Object> cancelarReservaAprobada(
+            @Header("Authorization") String authHeader,
+            @Path("idreserva") int idreserva,
+            @Body DtFactura dtFactura);
 
 
     @POST("/usuario/buscar/{idUsr}")

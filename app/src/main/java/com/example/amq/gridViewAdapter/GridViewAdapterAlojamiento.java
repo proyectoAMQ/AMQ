@@ -1,10 +1,12 @@
 package com.example.amq.gridViewAdapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class GridViewAdapterAlojamiento extends BaseAdapter {
     List<DtAlojamiento> dtAlojs;
@@ -86,6 +89,11 @@ public class GridViewAdapterAlojamiento extends BaseAdapter {
                 nueva_habView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("precioXNoche", hab.getPrecioNoche().toString() );
+                        editor.apply();
+
                         Bundle bundle = new Bundle();
                         bundle.putInt("idHabitacion", hab.getId() ) ;
                         bundle.putString("nomAloj", dtAlojs.get(i).getNombre());

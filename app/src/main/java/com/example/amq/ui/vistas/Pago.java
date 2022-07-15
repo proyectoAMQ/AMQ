@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.chilkatsoft.CkRest;
 import com.chilkatsoft.CkString;
 import com.chilkatsoft.CkStringBuilder;
 import com.example.amq.R;
+import com.example.amq.alerts.Alert;
 import com.example.amq.models.DtAlojamiento;
 import com.example.amq.models.paypal.Amount;
 import com.example.amq.models.paypal.ApplicationContext;
@@ -56,6 +58,7 @@ public class Pago extends Activity {
     private WebView browser=null;
     private ImageView loading=null;
     private Context context;
+    private View view;
 
     // Called when the activity is first created.
     @Override
@@ -75,6 +78,11 @@ public class Pago extends Activity {
         WebSettings webSettings = browser.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( context );
+
+        Double precioXNoche = Double.parseDouble( preferences.getString("precioXNoche","0") );
+        Integer cantDias = preferences.getInt("cantDias", 0 );
+        Double montoTotal = precioXNoche * cantDias;
 
 
         Item item = new Item(
@@ -83,7 +91,7 @@ public class Pago extends Activity {
                 "1",
                  new UnitAmount(
                     "USD",
-                    "100.00"
+                         montoTotal.toString()
                 )
 
         );
@@ -97,8 +105,8 @@ public class Pago extends Activity {
                 items,
                 new Amount(
                         "USD",
-                        "100.0",
-                        new Breakdown(new ItemTotal("USD", "100.00"))
+                        montoTotal.toString(),
+                        new Breakdown(new ItemTotal("USD", montoTotal.toString()))
                 )
         );
         List<PurchaseUnit> purchaseUnits = new ArrayList<>();
@@ -117,18 +125,23 @@ public class Pago extends Activity {
         call.enqueue( new Callback< DtOrderResponse >(){
             @Override
             public void onResponse(Call<DtOrderResponse> call, Response<DtOrderResponse> response) {
-                DtOrderResponse dtOrderResponse = response.body();
-                String redirectLink = dtOrderResponse.getLinks().get(1).getHref();
+                if( response.code()==200 || response.code()==201 ){
+                    DtOrderResponse dtOrderResponse = response.body();
+                    String redirectLink = dtOrderResponse.getLinks().get(1).getHref();
 
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getApplicationContext());
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("id_order", dtOrderResponse.getId() );
-                editor.apply();
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getApplicationContext());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("id_order", dtOrderResponse.getId() );
+                    editor.apply();
 
-                browser.loadUrl(redirectLink);
+                    browser.loadUrl(redirectLink);
 
-                browser.setVisibility(View.VISIBLE);
-                loading.setVisibility(View.INVISIBLE);
+                    browser.setVisibility(View.VISIBLE);
+                    loading.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    Toast.makeText(Pago.this, "Se produjo un erro inesperado", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override

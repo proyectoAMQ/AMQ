@@ -21,7 +21,7 @@ public class PaypalFunctions {
         // The auto-reconnect indicates that if the already-established HTTPS connection is closed,
         // then it will be automatically re-established as needed.
         boolean bAutoReconnect = true;
-        boolean success = rest.Connect("api.sandbox.paypal.com",443,true,bAutoReconnect);
+        boolean success = rest.Connect("api-m.sandbox.paypal.com",443,true,bAutoReconnect);
         if (success != true) {
             Log.i(TAG, rest.lastErrorText());
             return null;
@@ -40,8 +40,8 @@ public class PaypalFunctions {
 
         // For additional help on where to find  your client ID and API secret, see PayPal Client_ID and API_Secret
         rest.SetAuthBasic(
-                "AVRqGQLU2nZxL72TNBb-xWnZyehU75scM16Srbi-ZITKVYWdV2yLqSnw4hybDaZ3xi3yqBvzl8kJAwV9",
-                "EKLIptPbU4ay4aEY2it2vLc_LoEV5RLOAlS2awCKeeAJI37_TvjAYOMSX5Ttwpt3i0N0b2BEB7E8elgh");
+                "AaDJ6_EQjWrVxLQBV78NuolnYrHG8MQYOoNmbLkP-NB6g1UWGyH8JvPh0btTUliGIqxVbo9vZd_SqqWK",
+                "EMiLeDMYWL5SCKbd_T7iXxSziICycPKeX9rlr36rXMm-NhCUtmQQMIUE99RXrwNii3VO3ksqqfeTY90t");
 
         rest.AddQueryParam("grant_type","client_credentials");
 

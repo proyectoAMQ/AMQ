@@ -29,8 +29,11 @@ import com.example.amq.models.DtReservaAlojHab;
 import com.example.amq.models.PagoEstado;
 import com.example.amq.models.ReservaEstado;
 import com.example.amq.models.paypal.Amount;
+import com.example.amq.models.paypal.Breakdown;
+import com.example.amq.models.paypal.DtError;
 import com.example.amq.models.paypal.DtRefund;
 import com.example.amq.models.paypal.DtRefundReponse;
+import com.example.amq.models.paypal.ItemTotal;
 import com.example.amq.paypal.PaypalFunctions;
 import com.example.amq.rest.AMQEndpoint;
 import com.example.amq.rest.IAmqApi;
@@ -45,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -346,7 +350,8 @@ public class ReservaInfo extends Fragment {
         }
 
         if( pagoRealizado_orden==null || pago_monto==null || pago_monto==0 ){
-            throw new Exception("El estado de facturación es inconsistente, por favor póngase en contacto con un administrador.");
+            throw new Exception("El estado de facturación es inconsistente, por favor póngase en " +
+                    "contacto con un administrador.");
         }
 
         devolucion_monto = pago_monto/2;
@@ -355,9 +360,17 @@ public class ReservaInfo extends Fragment {
                 new Amount(
                         "USD",
                         devolucion_monto.toString(),
-                        null
+                        new Breakdown(
+                                new ItemTotal(
+                                        "USD",
+                                        devolucion_monto.toString()
+                                )
+                        )
                 ),
-                String.valueOf(reserva.getRes_id())
+                String.valueOf(reserva.getRes_id())+"-"+ String.valueOf( System.currentTimeMillis() ),
+                false,
+                "Refund de reserva APROBADA",
+                "Refund de reserva APROBADA"
         );
 
         IPaypalApi iPaypalApi = PaypalEndpoint.getIPaypalApi();
@@ -365,6 +378,7 @@ public class ReservaInfo extends Fragment {
 
         Call<DtRefundReponse> call = iPaypalApi.refund(
                 paypal_access_token,
+                String.valueOf( System.currentTimeMillis() ),
                 dtRefund,
                 pagoRealizado_orden
         );
@@ -372,7 +386,7 @@ public class ReservaInfo extends Fragment {
         call.enqueue(new Callback<DtRefundReponse>() {
             @Override
             public void onResponse(Call<DtRefundReponse> call, Response<DtRefundReponse> response) {
-                if( response.code()==200 ){
+                if( response.code()==201 || response.code()==200){
                     DtRefundReponse refund = response.body();
                     String id = refund.getId();
 
@@ -392,6 +406,13 @@ public class ReservaInfo extends Fragment {
                     devolucionBack(dtFactura);
                 }
                 else{
+                    ResponseBody e = response.errorBody();
+                    try{
+                        Log.e("errorResponse","" + e.string() );
+                    }catch(Exception ex){
+
+                    }
+
                     Alert.alertConfirm(
                             reservaInfoView,
                             "Error paypal",
@@ -428,7 +449,7 @@ public class ReservaInfo extends Fragment {
 
     private void devolucionBack(DtFactura dtFactura){
         IAmqApi iAmqApi = AMQEndpoint.getIAmqApi();
-        Call<Object> call = iAmqApi.cancelarReservaAprobada(jwToken , reserva.getRes_id());
+        Call<Object> call = iAmqApi.cancelarReservaAprobada(jwToken , reserva.getRes_id(), dtFactura);
         btnCancelar.setEnabled(false);
         call.enqueue(new Callback<Object>() {
             @Override
