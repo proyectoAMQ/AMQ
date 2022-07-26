@@ -165,11 +165,18 @@ public class Reservar extends Fragment {
                 }
                 if( calFFin!=null && calFInicio!=null ){
                     long milisDif = calFFin.getTimeInMillis() - calFInicio.getTimeInMillis();
-                    cantDias = (int) TimeUnit.MILLISECONDS.toDays(Math.abs(milisDif)) + 1;
+                    cantDias = (int) TimeUnit.MILLISECONDS.toDays((milisDif)) + 1;
 
                     Log.i("Dias", String.valueOf(cantDias) );
                     if(cantDias>0){
                         btnConfirmar.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        Toast.makeText(
+                                getContext(),
+                                "La fecha de inicio debe ser menor a la fecha de fin",
+                                Toast.LENGTH_LONG
+                        ).show();
                     }
                 }
                 layCalendario.setVisibility(View.GONE);
