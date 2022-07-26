@@ -140,7 +140,7 @@ public class Pago extends Activity {
                     loading.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    Toast.makeText(Pago.this, "Se produjo un erro inesperado", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Pago.this, "Se produjo un error inesperado", Toast.LENGTH_LONG).show();
                 }
             }
 

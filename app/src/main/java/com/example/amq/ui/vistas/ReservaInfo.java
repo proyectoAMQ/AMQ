@@ -341,12 +341,10 @@ public class ReservaInfo extends Fragment {
 
         //Obtiene datos de facturación
         for( DtFactura fact : facturas){
+            pago_monto = fact.getMonto();
             if( fact.getPagoEstado() == PagoEstado.REALIZADO ){
                 pagoRealizado_orden = fact.getIdPaypal();
-                pago_monto = fact.getMonto();
-            }
-            else if( fact.getPagoEstado() == PagoEstado.PENDIENTE ){
-                pago_monto = fact.getMonto();
+
             }
         }
 
@@ -355,7 +353,7 @@ public class ReservaInfo extends Fragment {
                     "contacto con un administrador.");
         }
 
-        devolucion_monto = pago_monto/2;
+        devolucion_monto = pago_monto/200;
 
         DtRefund dtRefund = new DtRefund(
                 new Amount(
@@ -420,10 +418,6 @@ public class ReservaInfo extends Fragment {
                             "Error al realizar la devolución através de paypal",
                             -1
                     );
-                    Log.e("Paypal refund ", "No se pudo relizar la devolución código http: "
-                            + String.valueOf(response.code()
-                            + response.errorBody().toString() )
-                    );
                 }
             }
 
@@ -464,8 +458,9 @@ public class ReservaInfo extends Fragment {
                             reservaInfoView,
                             "Reserva cancelada",
                             "La reserva con id "+String.valueOf(reserva.getRes_id()+
-                                    " ha sido cancelada, presione OK para continuar"),
-                            -1
+                                    " ha sido cancelada y se ha realizado un rembolso del 50 %, " +
+                                    "del monto abonado, presione OK para continuar"),
+                            R.id.reservas_fragment
                     );
                 }
                 else if( response.code()==403){
